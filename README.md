@@ -15,5 +15,5 @@ It is *TIME* to be creative!
 Here are the basic rules of this language:
 ![Untitled_Artwork](https://user-images.githubusercontent.com/46990486/152269041-471dcd20-7cbc-4c52-8d6c-c980ade99f69.jpg)
 
-And here is an example program:!
-[helloWorld](https://user-images.githubusercontent.com/46990486/152269093-493fa58a-a9c3-4e8a-9ac7-0682157ae827.jpg)
+And here is an example program:
+![helloWorld](https://user-images.githubusercontent.com/46990486/152269093-493fa58a-a9c3-4e8a-9ac7-0682157ae827.jpg)
