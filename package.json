@@ -1,0 +1,27 @@
+{
+  "name": "cs3802",
+  "version": "1.0.0",
+  "description": "Compiler for Palet",
+  "main": "src/palet.js",
+  "directories": {
+    "doc": "docs",
+    "example": "examples",
+    "test": "test"
+  },
+  "scripts": {
+    "test": "c8 node_modules/.bin/mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/drwwoob/Palet.git"
+  },
+  "keywords": [
+    "Compiler"
+  ],
+  "author": "Kelly Tao, March Booker",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/drwwoob/Palet/issues"
+  },
+  "homepage": "https://github.com/drwwoob/Palet#readme"
+}
