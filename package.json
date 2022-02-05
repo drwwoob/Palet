@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Compiler for Palet",
   "main": "src/palet.js",
+  "type": "module",
   "directories": {
     "doc": "docs",
     "example": "examples",
@@ -23,5 +24,12 @@
   "bugs": {
     "url": "https://github.com/drwwoob/Palet/issues"
   },
-  "homepage": "https://github.com/drwwoob/Palet#readme"
+  "homepage": "https://github.com/drwwoob/Palet#readme",
+  "devDependencies": {
+    "c8": "^7.11.0",
+    "mocha": "^9.2.0"
+  },
+  "dependencies":{
+    "ohm-js":"^16.2.0"
+  }
 }
