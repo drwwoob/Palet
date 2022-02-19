@@ -17,12 +17,6 @@ export class Assignment {
   }
 }
 
-export class Call {
-  constructor(callee, args, isStatement = false) {
-    Object.assign(this, { callee, args, isStatement });
-  }
-}
-
 export class BinaryExpression {
   constructor(op, left, right) {
     Object.assign(this, { op, left, right });
@@ -34,3 +28,21 @@ export class UnaryExpression {
     Object.assign(this, { op, operand });
   }
 }
+
+export class Call {
+  constructor(callee, args) {
+    Object.assign(this, { callee, args, isStatement });
+  }
+}
+
+export class Function {
+  constructor(name, paramCount, readOnly, valueReturning) {
+    Object.assign(this, { name, paramCount, readOnly, valueReturning });
+  }
+}
+
+export const standardLibrary = Object.freeze({
+  print: new Function("print", Infinity, true, false),
+  print: new Function("goto", 1, true, false),
+  print: new Function("gotoIf", 2, true, false),
+});

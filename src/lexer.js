@@ -1,4 +1,4 @@
-import { Token, error } from "./core.js";
+import { Token } from "./core.js";
 
 export default function* tokenize(program) {
   program.replace(/\r?\n/, "");

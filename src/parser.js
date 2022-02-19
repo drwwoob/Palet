@@ -1,9 +1,9 @@
 import {
   Program,
   Assignment,
-  Call,
   BinaryExpression,
   UnaryExpression,
+  Call,
 } from "./core.js";
 
 const operators = ["*", "P", "+", "-", "+"];
@@ -17,6 +17,7 @@ function addToPalette(
   tokenStream,
   swatchCount = palettes.get(id).swatches
 ) {
+  const statements = [];
   let currentColor = currentColor;
   let nextToken = tokenStream.next().value;
 
@@ -34,6 +35,12 @@ function addToPalette(
   return nextToken;
 }
 
+function pushAssignment(target, operand1, operator, operand2) {
+  statements.push(
+    new Assignment(target, new BinaryExpression("operator", operand1, operand2))
+  );
+}
+
 export default function parse(tokenStream) {
   let nextToken = tokenStream.next().value;
 
@@ -46,83 +53,104 @@ export default function parse(tokenStream) {
       let colorB = colors.get(nextToken);
 
       if (colorB == undefined) {
-        let paletteID = "P" + palettes.size;
+        let newPaletteID = "P" + palettes.size;
 
         //start palette
-        colors.set(colorA, { palette: paletteID, operator: operators[0] });
-        palettes.set(paletteID, { vale: 0, swatches: 1 });
+        colors.set(colorA, { palette: newPaletteID, operator: operators[0] });
+        palettes.set(newPaletteID, { swatches: 1 });
+        statements.push(new Assignment(newPaletteID, 0));
 
         //define new colors and go back to top
-        nextToken = addToPalette(paletteID, colorB, tokenStream);
+        nextToken = addToPalette(newPaletteID, colorB, tokenStream);
       }
       //else back to top without consuming colorB
     } else if (colorA.operator != "*") {
+      let register = palettes.get(colorA).palette;
       switch (colorA.operator) {
         case "P": //print
+          statements.push(new Call("print", register));
         case "+": //++
+          pushAssignment(register, register, "+", 1);
         case "-": //--
+          pushAssignment(register, register, "-", 1);
         case "j": //jmp
+          statements.push(new Call("goto", register));
       }
       //back to top
       nextToken = tokenStream.next().value;
     } else {
       //colorA.operator == "*"
+      let registerA = palettes.get(colorA).palette;
+
+      //look at next color
       nextToken = tokenStream.next().value;
       let colorB = colors.get(nextToken);
 
       if (colorB == undefined) {
-        swatchCount = palettes.get(id).swatches;
+        swatchCount = palettes.get(registerdA).palette;
         if (swatchCount < 5) {
           //define new colors and go back to top
-          nextToken = addToPalette(
-            palettes.get(colorA.palette),
-            colorB,
-            tokenStream
-          );
+          nextToken = addToPalette(registerA, colorB, tokenStream);
         } else {
+          statements.push(new Call("print", [registerA]));
           //print
           //back to top without consuming colorB
         }
-      } else if (colorB.operator != "P") {
-        switch (colorB.operator) {
-          case "+": //+=
-          case "-": //-=
-          case "j": //if jmp
-        }
-        // back to top
-        nextToken = tokenStream.next().value;
       } else {
-        //colorB.operator == "P"
-        //look at next color
-        nextToken = tokenStream.next().value;
-        let colorC = colors.get(nextToken);
+        let registerB = palettes.get(colorB).palette;
 
-        if (colorC != undefined) {
-          switch (colorC.operator) {
-            case "+": //+
-            case "-": //-
-            case "*": //*
-            case "j": ///
+        if (colorB.operator != "P") {
+          switch (colorB.operator) {
+            case "+": //+=
+              pushAssignment(registerA, registerA, "+", registerB);
+            case "-": //-=
+              pushAssignment(registerA, registerA, "-", registerB);
+            case "j": //if jmp
+              statements.push(new Call("goto", [operandA, operandB]));
           }
-          //back to top
+          // back to top
           nextToken = tokenStream.next().value;
         } else {
-          //colorC is undefined
+          //colorB.operator == "P"
           //look at next color
           nextToken = tokenStream.next().value;
-          let colorD = colors.get(nextToken);
+          let colorC = colors.get(nextToken);
 
-          if (colorD != undefined) {
-            switch (colorD.operator) {
-              case "*": //%
-              case "j": //^
-              case "+": //nothing yet
-              case "-": //nothing yet
+          if (colorC != undefined) {
+            let registerC = palettes.get(colorC).palette;
+            switch (colorC.operator) {
+              case "+": //+
+                pushAssignment(registerA, registerB, "+", registerC);
+              case "-": //-
+                pushAssignment(registerA, registerB, "-", registerC);
+              case "*": //*
+                pushAssignment(registerA, registerB, "*", registerC);
+              case "j": ///
+                pushAssignment(registerA, registerB, "/", registerC);
             }
             //back to top
             nextToken = tokenStream.next().value;
+          } else {
+            //current colorC is undefined
+            //look at next color and make it colorC
+            nextToken = tokenStream.next().value;
+            let colorC = colors.get(nextToken);
+
+            if (colorC != undefined) {
+              let registerC = palettes.get(colorC).palette;
+              switch (colorC.operator) {
+                case "*": //**
+                  pushAssignment(registerA, registerB, "^", registerC);
+                case "j": //%
+                  pushAssignment(registerA, registerB, "%", registerC);
+                case "+": //nothing yet
+                case "-": //nothing yet
+              }
+              //back to top
+              nextToken = tokenStream.next().value;
+            }
+            //back to top without consuming colorC
           }
-          //back to top without consuming colorD
         }
       }
     }
