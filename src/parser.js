@@ -1,35 +1,3 @@
-// Parser
-//
-// This is a recursive descent parser. Each phrase rule gets its own parsing
-// function which returns a piece of the Abstract Syntax Tree or throws an
-// Error. More information about Recursive Descent Parsing can be found at
-// https://en.wikipedia.org/wiki/Recursive_descent_parser.
-//
-// The parser is implemented as a function accepting a token stream from a
-// generator. In addition to the variable *token*, the parser uses three
-// utility functions:
-//
-//     match(t)
-//         Here t is a lexeme, a category, or an array of lexemes/categories.
-//         If the next token in the stream matches t (has the lexeme, has the
-//         category, or its lexeme/category in the array), the consume it and
-//         return it. Otherwise, throw an error.
-//
-//     match()
-//         Consume and return the next token, whatever it is.
-//
-//     at(t)
-//         Similar to match(t) but just returns whether the current token
-//         matches, without consuming it.
-//
-// When calling match() or at(), you can supply either a category or a lexeme,
-// or an array of categories and lexemes:
-//
-//     match("Category:Id")
-//     match("=")
-//     match(["+", "-", "Category:Num"])
-//     at(["/", "*"])
-
 import {
   Program,
   Assignment,
@@ -39,114 +7,116 @@ import {
   error,
 } from "./core.js"
 
+const operators = ["*", "P", "+", "-", "+"]
+
+const colors = new Map() //map color to register and oprator
+const palettes = new Map() //map palette to value and size (register)
+
+function addToPalette(id, currentColor, tokenStream, swatchCount = palettes.get(id).swatches){
+  let currentColor = currentColor
+  let nextToken = tokenStream.next().value
+
+  while (colors.get(currentColor) == undefined && swatchCount <= 5) {
+    swatchCount ++;
+    palettes.get(id).swatches = swatchCount
+    colors.set(currentColor, {palette: id, operator: operators[swatchCount-1]})
+    
+    nextToken = tokenStream.next().value
+    let currentColor =  colors.get(nextToken)
+  }
+  return nextToken
+}
+
 export default function parse(tokenStream) {
-  let token = tokenStream.next().value
+  let nextToken = tokenStream.next().value
+    
+  while (nextToken != null) {
+    let colorA = colors.get(nextToken)
+    
+    if (colorA == undefined) {
+      //look at next color
+      nextToken = tokenStream.next().value
+      let colorB = colors.get(nextToken)
+      
+      if (colorB == undefined) {
+        let paletteID = "P"+(palettes.size)
 
-  function at(candidate) {
-    // Just checks whether we’re (looking) at a token or tokens we expect
-    if (Array.isArray(candidate)) {
-      return candidate.some(at)
-    }
-    if (candidate.startsWith("Category:")) {
-      return token.category === candidate.slice(9)
-    }
-    return token.lexeme === candidate
-  }
+        //start palette
+        colors.set(colorA, {palette: paletteID, operator: operators[0]})
+        palettes.set(paletteID, {vale: 0, swatches: 1})
 
-  function match(expected) {
-    // Advances iff we’re at a token we want to be at
-    if (expected === undefined || at(expected)) {
-      const matchedToken = token
-      token = tokenStream.next().value
-      return matchedToken
-    }
-    error(`Expected '${expected}'`, token)
-  }
-
-  function parseProgram() {
-    const statements = []
-    do {
-      statements.push(parseStatement())
-      match(";")
-    } while (!at("Category:End"))
-    return new Program(statements)
-  }
-
-  function parseStatement() {
-    if (at("Category:Id")) {
-      const id = match()
-      if (at("=")) {
-        match()
-        return new Assignment(id, parseExpression())
-      } else if (at("(")) {
-        return new Call(id, parseArgs(), true)
+        //define new colors and go back to top
+        nextToken = addToPalette(paletteID, colorB, tokenStream)
+        
       }
-      error(`"=" or "(" expected`, token)
-    }
-    error("Statement expected", token)
-  }
+      //else back to top without consuming colorB
 
-  function parseExpression() {
-    let left = parseTerm()
-    while (at(["+", "-"])) {
-      const op = match()
-      const right = parseTerm()
-      left = new BinaryExpression(op, left, right)
-    }
-    return left
-  }
+    } else if (colorA.operator != "*") { 
+      switch (colorA.operator) {
+        case "P": //print
+        case "+": //++
+        case "-": //--
+        case "j": //jmp
+      }
+      //back to top
+      nextToken = tokenStream.next().value
+      
+    } else {
+      //colorA.operator == "*"
+      nextToken = tokenStream.next().value
+      let colorB = colors.get(nextToken)
 
-  function parseTerm() {
-    let left = parseFactor()
-    while (at(["*", "/", "%"])) {
-      const op = match()
-      const right = parseFactor()
-      left = new BinaryExpression(op, left, right)
-    }
-    return left
-  }
+      if (colorB == undefined) {
+        swatchCount = palettes.get(id).swatches
+        if (swatchCount < 5) {
+          //define new colors and go back to top
+          nextToken = addToPalette(palettes.get(colorA.palette), colorB, tokenStream)
+        } else {
+          //print
+          //back to top without consuming colorB
+        }
+      } else if (colorB.operator != "P") {
+        switch (colorB.operator) {
+          case "+": //+=
+          case "-": //-=
+          case "j": //if jmp
+        }
+        // back to top
+        nextToken = tokenStream.next().value
+      } else {
+         //colorB.operator == "P"
+         //look at next color
+         nextToken = tokenStream.next().value
+         let colorC = colors.get(nextToken)
 
-  function parseFactor() {
-    let left = parsePrimary()
-    if (at("**")) {
-      const op = match()
-      const right = parseFactor()
-      left = new BinaryExpression(op, left, right)
-    }
-    return left
-  }
+         if (colorC != undefined) {
+            switch (colorC.operator) {
+              case "+": //+
+              case "-": //-
+              case "*": //*
+              case "j": ///
+            }
+            //back to top  
+            nextToken = tokenStream.next().value
+         } else {
+          //colorC is undefined
+          //look at next color
+          nextToken = tokenStream.next().value
+          let colorD = colors.get(nextToken)
 
-  function parsePrimary() {
-    if (at("Category:Num")) {
-      return match()
-    } else if (at("Category:Id")) {
-      const id = match()
-      return at("(") ? new Call(id, parseArgs(), false) : id
-    } else if (at("-")) {
-      const op = match()
-      return new UnaryExpression(op, parsePrimary())
-    } else if (at("(")) {
-      match()
-      const e = parseExpression()
-      match(")")
-      return e
-    }
-    error("Expected id, number, or '('", token)
-  }
-
-  function parseArgs() {
-    match("(")
-    const args = []
-    if (!at(")")) {
-      args.push(parseExpression())
-      while (at(",")) {
-        match()
-        args.push(parseExpression())
+          if (colorD != undefined) {
+            switch (colorD.operator) {
+              case "*": //%
+              case "j": //^
+              case "+": //nothing yet
+              case "-": //nothing yet
+            }
+            //back to top
+            nextToken = tokenStream.next().value
+          }
+          //back to top without consuming colorD
+        }
       }
     }
-    match(")")
-    return args
   }
-
-  return parseProgram()
 }
