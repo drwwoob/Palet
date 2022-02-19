@@ -2,9 +2,14 @@ import { Token, error } from "./core.js";
 
 export default function* tokenize(program) {
   program.replace(/\r?\n/, "");
-  let swatchNumber = 0;
+  let tokenNumber = 0;
+  let previousColor = "";
+
   for (let color of program.split(",")) {
-    yield* new Token(swatchNumber, color);
-    swatchNumber++;
+    if (color != previousColor) {
+      yield* new Token(tokenNumber, color);
+      previousColor = color;
+    }
+    tokenNumber++;
   }
 }
