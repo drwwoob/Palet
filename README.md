@@ -4,7 +4,7 @@
 
 Palet is a color-based assembly-level language inspired by Piet, which reads image files pixel-by-pixel.
 
-- Palet’s register-based architecture allows it to support user-defined color meanings from a preset list
+- Palet’s register-based architecture allows it to support user-defined color meanings from a preset list.
 - With maximum-precision color detection, a single Palet program can use as many as 2796202 different registers.
 - Unlike Piet, Palet does not distinguish between small and large patches of the same color.
 
