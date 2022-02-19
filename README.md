@@ -3,10 +3,10 @@
 ## Meet Palet!
 
 - Palet is a color-based assembly-level language inspired by Piet, which reads image files pixel-by-pixel.
-- Palet’s register-based architecture allows it to support user-defined color meanings from a preset list\
-- With maximum-precision color detection, a single Palet program can use as many as 2796202 different registers.\
-- Unlike Piet, Palet does not distinguish between small and large patches of the same color.\
-  Every rectangular, pixel-based image is a syntactically valid Palet program.
+- Palet’s register-based architecture allows it to support user-defined color meanings from a preset list
+- With maximum-precision color detection, a single Palet program can use as many as 2796202 different registers.
+- Unlike Piet, Palet does not distinguish between small and large patches of the same color.
+- Every rectangular, pixel-based image is a syntactically valid Palet program.
 
 ## It’s time to be CREATIVE!
 
@@ -14,7 +14,10 @@
 
 The lexer currently takes a .pal file. These files are stand-ins for a sequence of colors that the final version of Palet will read, left to right, from a png.
 
-Any number of adjacent pixels in a png with the same RGB value will be considered a Palet token. Two tokens of the same RGB value must be separated completely by another token for Palete to distinguish them. Two pixels connected at a corner are not considered adjacent. Tokens completely surrounded on all sides by one larger token will not be read, and can be used to write comments or add visual flair.
+- Any number of adjacent pixels in a png with the same RGB value will be considered a Palet token.
+- Two tokens of the same RGB value must be separated completely by another token for Palete to distinguish them.
+- Two pixels connected at a corner are not considered adjacent.
+- Tokens completely surrounded on all sides by one larger token will not be read, and can be used to write comments or add visual flair.
 
 ![IMG_4B990C7F236E-1](https://user-images.githubusercontent.com/20586059/154793314-0cf012aa-212b-4c30-a13a-955771982a45.png)
 
