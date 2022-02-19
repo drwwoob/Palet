@@ -13,7 +13,6 @@
 ## It’s time to be CREATIVE!
 
 ```
-
 ### Lexer Breakdown:
 
 The lexer currently takes a .pal file. These files are stand-ins for a sequence of colors that the final version of Palet will read, left to right, from a png.
@@ -22,6 +21,7 @@ Any number of adjacent pixels in a png with the same RGB value will be considere
 ![IMG_4B990C7F236E-1](https://user-images.githubusercontent.com/20586059/154793314-0cf012aa-212b-4c30-a13a-955771982a45.png)
 ```
 
+```
 ## Parser Breakdown:
 
 _Palettes_ are a series of 2 to 5 RBG values (swatches) associated with a register. This register defaults to zero upon declaration. All swatches in a palette are aliases for a pointer to the palette’s register.
@@ -30,17 +30,11 @@ The specific aliases used in a program, along with their order and number, chang
 ![IMG_4B990C7F236E-1](https://user-images.githubusercontent.com/20586059/154793318-0f39565b-bab6-405d-bcd7-609b0e093356.jpg)
 
 ```
+
+```
 ## Examples:
 
 ![IMG_4B990C7F236E-1](https://user-images.githubusercontent.com/20586059/154793315-b331e75d-a37d-4bfe-ab20-5f9313b19a47.jpg)
 ![IMG_4B990C7F236E-1](https://user-images.githubusercontent.com/20586059/154793317-bbaf30ac-20b9-4c3f-abb0-eecf55f82884.jpg)
-
-```
-
-```
-
-```
-
-```
 
 ```
