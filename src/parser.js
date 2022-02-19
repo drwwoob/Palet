@@ -1,15 +1,16 @@
-import {
-  Program,
-  Assignment,
-  BinaryExpression,
-  UnaryExpression,
-  Call,
-} from "./core.js";
+import { Program, Assignment, BinaryExpression, Call } from "./core.js";
 
 const operators = ["*", "P", "+", "-", "+"];
 
 const colors = new Map(); //map color to register and oprator
 const palettes = new Map(); //map palette to value and size (register)
+
+const statements = [];
+
+export default function parse(tokenStream) {
+  parseStatements(tokenStream);
+  return new Program(statements);
+}
 
 function addToPalette(
   id,
@@ -17,7 +18,6 @@ function addToPalette(
   tokenStream,
   swatchCount = palettes.get(id).swatches
 ) {
-  const statements = [];
   let currentColor = currentColor;
   let nextToken = tokenStream.next().value;
 
@@ -37,11 +37,11 @@ function addToPalette(
 
 function pushAssignment(target, operand1, operator, operand2) {
   statements.push(
-    new Assignment(target, new BinaryExpression("operator", operand1, operand2))
+    new Assignment(target, new BinaryExpression(operator, operand1, operand2))
   );
 }
 
-export default function parse(tokenStream) {
+function parseStatements(tokenStream) {
   let nextToken = tokenStream.next().value;
 
   while (nextToken != null) {
