@@ -1,8 +1,5 @@
 import tokenize from "./lexer.js";
 import parse from "./parser.js";
-import analyze from "./analyzer.js";
-import optimize from "./optimizer.js";
-import generate from "./generator/index.js";
 
 export default function compile(source, outputType) {
   const tokens = tokenize(source);

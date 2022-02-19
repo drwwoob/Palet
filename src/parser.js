@@ -18,7 +18,7 @@ function addToPalette(
   tokenStream,
   swatchCount = palettes.get(id).swatches
 ) {
-  let currentColor = currentColor;
+  currentColor = currentColor;
   let nextToken = tokenStream.next().value;
 
   while (colors.get(currentColor) == undefined && swatchCount <= 5) {

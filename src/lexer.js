@@ -7,7 +7,7 @@ export default function* tokenize(program) {
 
   for (let color of program.split(",")) {
     if (color != previousColor) {
-      yield* new Token(tokenNumber, color);
+      yield new Token(tokenNumber, color);
       previousColor = color;
     }
     tokenNumber++;
