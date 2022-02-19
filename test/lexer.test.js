@@ -1,7 +1,8 @@
-import assert from "assert/strict"
-import tokenize from "../src/lexer.js"
-import { Token } from "../src/core.js"
+import assert from "assert/strict";
+import tokenize from "../src/lexer.js";
+import { Token } from "../src/core.js";
 
+// prettier-ignore
 const errorCases = [
   ["malformed number", "2.f", /Error: Line 1, Column 3: Digit expected/],
   ["unknown character", "y = @x", /Error: Line 1, Column 4: Unexpected character: '@'/],
@@ -15,7 +16,7 @@ const allTokens = `𐌸𐌺𐍉𐍆 =  1
 
 
    // OK
-   %*1-       77;`
+   %*1-       77;`;
 
 const expectedTokens = [
   new Token("Id", "𐌸𐌺𐍉𐍆", 1, 1),
@@ -41,15 +42,15 @@ const expectedTokens = [
   new Token("Num", "77", 7, 15),
   new Token("Sym", ";", 7, 17),
   new Token("End", "", 8, 1),
-]
+];
 
 describe("The lexer", () => {
   it(`correctly tokenizes the big test case`, () => {
-    assert.deepEqual(expectedTokens, [...tokenize(allTokens)])
-  })
+    assert.deepEqual(expectedTokens, [...tokenize(allTokens)]);
+  });
   for (const [scenario, source, errorMessagePattern] of errorCases) {
     it(`throws on ${scenario}`, () => {
-      assert.throws(() => [...tokenize(source)], errorMessagePattern)
-    })
+      assert.throws(() => [...tokenize(source)], errorMessagePattern);
+    });
   }
-})
+});

@@ -1,7 +1,7 @@
-import assert from "assert/strict"
-import tokenize from "../src/lexer.js"
-import parse from "../src/parser.js"
-import * as core from "../src/core.js"
+import assert from "assert/strict";
+import tokenize from "../src/lexer.js";
+import parse from "../src/parser.js";
+import * as core from "../src/core.js";
 
 const syntaxChecks = [
   ["all numeric literal forms", "print(8 * 89.123);"],
@@ -9,7 +9,7 @@ const syntaxChecks = [
   ["end of program inside comment", "print(0); // yay"],
   ["comments with no text", "print(1);//\nprint(0);//"],
   ["non-Latin letters in identifiers", "コンパイラ = 100;"],
-]
+];
 
 const syntaxErrors = [
   [
@@ -54,9 +54,9 @@ const syntaxErrors = [
     "x = * 71;",
     /Line 1, Column 5: Expected id, number, or '\('/,
   ],
-]
+];
 
-const source = `x=-1;print(x**5);`
+const source = `x=-1;print(x**5);`;
 
 const expectedAst = new core.Program([
   new core.Assignment(
@@ -77,20 +77,20 @@ const expectedAst = new core.Program([
     ],
     true
   ),
-])
+]);
 
 describe("The parser", () => {
   for (const [scenario, source] of syntaxChecks) {
     it(`recognizes that ${scenario}`, () => {
-      assert(parse(tokenize(source)))
-    })
+      assert(parse(tokenize(source)));
+    });
   }
   for (const [scenario, source, errorMessagePattern] of syntaxErrors) {
     it(`throws on ${scenario}`, () => {
-      assert.throws(() => parse(tokenize(source)), errorMessagePattern)
-    })
+      assert.throws(() => parse(tokenize(source)), errorMessagePattern);
+    });
   }
   it("produces the expected AST for all node types", () => {
-    assert.deepEqual(parse(tokenize(source)), expectedAst)
-  })
-})
+    assert.deepEqual(parse(tokenize(source)), expectedAst);
+  });
+});

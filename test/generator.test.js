@@ -1,12 +1,12 @@
-import assert from "assert/strict"
-import tokenize from "../src/lexer.js"
-import parse from "../src/parser.js"
-import analyze from "../src/analyzer.js"
-import optimize from "../src/optimizer.js"
-import generate from "../src/generator/index.js"
+import assert from "assert/strict";
+import tokenize from "../src/lexer.js";
+import parse from "../src/parser.js";
+import analyze from "../src/analyzer.js";
+import optimize from "../src/optimizer.js";
+import generate from "../src/generator/index.js";
 
 function dedent(s) {
-  return `${s}`.replace(/(?<=\n)\s+/g, "").trim()
+  return `${s}`.replace(/(?<=\n)\s+/g, "").trim();
 }
 
 // Just one trivial test case for now, enough to get coverage.
@@ -61,15 +61,15 @@ const fixture = {
       }
     `,
   },
-}
+};
 
 describe("The code generator", () => {
   for (const target of ["js", "c", "llvm"]) {
-    it(`produces expected ${target} output for the small program`, done => {
-      const intermediate = optimize(analyze(parse(tokenize(fixture.source))))
-      const actual = generate(target)(intermediate)
-      assert.deepEqual(actual, fixture.expected[target])
-      done()
-    })
+    it(`produces expected ${target} output for the small program`, (done) => {
+      const intermediate = optimize(analyze(parse(tokenize(fixture.source))));
+      const actual = generate(target)(intermediate);
+      assert.deepEqual(actual, fixture.expected[target]);
+      done();
+    });
   }
-})
+});

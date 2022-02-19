@@ -1,20 +1,20 @@
-import assert from "assert/strict"
-import tokenize from "../src/lexer.js"
-import parse from "../src/parser.js"
-import analyze from "../src/analyzer.js"
-import optimize from "../src/optimizer.js"
-import * as core from "../src/core.js"
+import assert from "assert/strict";
+import tokenize from "../src/lexer.js";
+import parse from "../src/parser.js";
+import analyze from "../src/analyzer.js";
+import optimize from "../src/optimizer.js";
+import * as core from "../src/core.js";
 
 // Make some test cases easier to read
-const x = new core.Variable("x", false)
-const neg = x => new core.UnaryExpression("-", x)
-const power = (x, y) => new core.BinaryExpression("**", x, y)
-const sqrt = core.standardLibrary.sqrt
-const print = core.standardLibrary.print
-const call = (f, args, isStatement) => new core.Call(f, args, isStatement)
+const x = new core.Variable("x", false);
+const neg = (x) => new core.UnaryExpression("-", x);
+const power = (x, y) => new core.BinaryExpression("**", x, y);
+const sqrt = core.standardLibrary.sqrt;
+const print = core.standardLibrary.print;
+const call = (f, args, isStatement) => new core.Call(f, args, isStatement);
 
 function expression(e) {
-  return analyze(parse(tokenize(`x=1; print(${e});`))).statements[1].args[0]
+  return analyze(parse(tokenize(`x=1; print(${e});`))).statements[1].args[0];
 }
 
 const tests = [
@@ -50,12 +50,12 @@ const tests = [
     analyze(parse(tokenize("x=1; x=x; print(x);"))),
     new core.Program([new core.Assignment(x, 1), call(print, [x], true)]),
   ],
-]
+];
 
 describe("The optimizer", () => {
   for (const [scenario, before, after] of tests) {
     it(`${scenario}`, () => {
-      assert.deepEqual(optimize(before), after)
-    })
+      assert.deepEqual(optimize(before), after);
+    });
   }
-})
+});
