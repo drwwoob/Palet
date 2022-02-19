@@ -45,6 +45,7 @@ function parseStatements(tokenStream) {
   let nextToken = tokenStream.next().value;
 
   while (nextToken != null) {
+    console.log(nextToken);
     let colorA = colors.get(nextToken);
 
     if (colorA == undefined) {

@@ -7,11 +7,5 @@ export default function compile(source, outputType) {
   const ast = parse(tokens);
   if (outputType === "ast") return ast;
   const analyzed = analyze(ast);
-  if (outputType === "analyzed") return analyzed;
-  const optimized = optimize(analyzed);
-  if (outputType === "optimized") return optimized;
-  if (["js"].includes(outputType)) {
-    return generate(outputType)(optimized);
-  }
   throw new Error("Unknown output type");
 }
