@@ -4,7 +4,6 @@ import {
   Call,
   BinaryExpression,
   UnaryExpression,
-  error,
 } from "./core.js"
 
 const operators = ["*", "P", "+", "-", "+"]
