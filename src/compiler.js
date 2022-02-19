@@ -13,7 +13,7 @@ export default function compile(source, outputType) {
   if (outputType === "analyzed") return analyzed;
   const optimized = optimize(analyzed);
   if (outputType === "optimized") return optimized;
-  if (["js", "c", "llvm"].includes(outputType)) {
+  if (["js"].includes(outputType)) {
     return generate(outputType)(optimized);
   }
   throw new Error("Unknown output type");

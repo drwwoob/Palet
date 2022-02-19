@@ -10,14 +10,11 @@ const help = `Palet compiler
 Syntax: node palet.js <filename> <outputType>
 
 Prints to stdout according to <outputType>, which must be one of:
-
   tokens     the token sequence
   ast        the abstract syntax tree
   analyzed   the semantically analyzed representation
   optimized  the optimized semantically analyzed representation
   js         the translation to JavaScript
-  c          the translation to C
-  llvm       the translation to LLVM IR
 `;
 
 async function compileFromFile(filename, outputType) {
