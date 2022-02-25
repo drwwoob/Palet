@@ -92,7 +92,6 @@ function parseStatements(tokenStream) {
       let colorB = tokenStream.next().value;
       if (colorB != undefined) {
         let swatchB = swatches.get(colorB);
-
         if (swatchB == undefined) {
           let swatchCount = paletteA.swatches;
           if (swatchCount < 5) {
@@ -109,11 +108,10 @@ function parseStatements(tokenStream) {
           let operandB = swatchB.palette;
           if (swatchB.operator != "P") {
             switch (swatchB.operator) {
-              case "+": //+=
-                pushAssignment(operandA, operandA, "+", operandB);
+              case "+": //escape
                 break;
               case "-": //-=
-                pushAssignment(operandA, operandA, "-", operandB);
+                statements.push(new Assignment(operandA, operandB));
                 break;
               case "j": //if jmp
                 statements.push(new Call("gotoIf", [operandA, operandB]));
