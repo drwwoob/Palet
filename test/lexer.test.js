@@ -1,6 +1,6 @@
 import assert from "assert/strict"
 import tokenize from "../src/lexer.js"
-import { Token } from "../src/core.js"
+import { Color } from "../src/core.js";
 
 // incase we need error cases
 // const errorCases = [
@@ -12,15 +12,16 @@ const allTokens = `red1, red2, red3, red4, red5`
 
 //there was an error of can't delete space, our goal is to eliminate that
 const expectedTokens = [
-  new Token(0,"red1"),
-  new Token(1,"red2"),
-  new Token(2,"red3"),
-  new Token(3,"red4"),
-  new Token(4,"red5"),
+  new Color("red1"),
+  new Color("red2"),
+  new Color("red3"),
+  new Color("red4"),
+  new Color("red5"),
+  new Color("END"),
 ]
 
 describe("The lexer", () => {
-  it(`correctly tokenizes the big test case`, () => {
+  it(`correctly tokenizes a color string with space`, () => {
     assert.deepEqual(expectedTokens, [...tokenize(allTokens)])
   })
   // for (const [scenario, source, errorMessagePattern] of errorCases) {

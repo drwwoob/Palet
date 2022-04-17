@@ -1,4 +1,4 @@
-// import { Token } from "./core.js";
+import { Color } from "./core.js";
 
 export default function* tokenize(program) {
 program = program.replace(/\s/g, "");
@@ -6,11 +6,11 @@ program = program.replace(/\s/g, "");
   let previousColor = "";
 
   for (let color of program.split(",")) {
-    if (color != previousColor) {
+    if (color != previousColor && color) {
       // yield new Token(tokenNumber, color);
-      yield color;
+      yield new Color(color);
       previousColor = color;
     }
-    // tokenNumber++;
   }
+  yield new Color("END");
 }

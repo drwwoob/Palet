@@ -3,10 +3,12 @@ import util from "util"
 import ast from "../src/parser.js"
 
 describe('The differentiator', () => {
-  it('detects malformed polynomials', () => {
+  //detecting empty string, though i think this would not happen
+  it('detects empty string', () => {
     assert.throws(() => parse([]))
     //assert.throws(() => derivative('blah'))
   })
+})
 
 //
 
