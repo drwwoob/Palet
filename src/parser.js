@@ -1,154 +1,187 @@
-// Parser
-//
-// This is a recursive descent parser. Each phrase rule gets its own parsing
-// function which returns a piece of the Abstract Syntax Tree or throws an
-// Error. More information about Recursive Descent Parsing can be found at
-// https://en.wikipedia.org/wiki/Recursive_descent_parser.
-//
-// The parser is implemented as a function accepting a token stream from a
-// generator. In addition to the variable *token*, the parser uses three
-// utility functions:
-//
-//     match(t)
-//         Here t is a lexeme, a category, or an array of lexemes/categories.
-//         If the next token in the stream matches t (has the lexeme, has the
-//         category, or its lexeme/category in the array), the consume it and
-//         return it. Otherwise, throw an error.
-//
-//     match()
-//         Consume and return the next token, whatever it is.
-//
-//     at(t)
-//         Similar to match(t) but just returns whether the current token
-//         matches, without consuming it.
-//
-// When calling match() or at(), you can supply either a category or a lexeme,
-// or an array of categories and lexemes:
-//
-//     match("Category:Id")
-//     match("=")
-//     match(["+", "-", "Category:Num"])
-//     at(["/", "*"])
+import { Program, Assignment, BinaryExpression, Call } from "./core.js";
 
-import {
-  Program,
-  Assignment,
-  Call,
-  BinaryExpression,
-  UnaryExpression,
-  error,
-} from "./core.js"
+const operators = ["*", "P", "+", "-", "+"];
+
+const swatches = new Map(); //map swatch to register and oprator
+const palettes = new Map(); //map palette to value and size (register)
+
+const statements = [];
 
 export default function parse(tokenStream) {
-  let token = tokenStream.next().value
+  parseStatements(tokenStream);
+  return new Program(statements);
+}
 
-  function at(candidate) {
-    // Just checks whether we’re (looking) at a token or tokens we expect
-    if (Array.isArray(candidate)) {
-      return candidate.some(at)
-    }
-    if (candidate.startsWith("Category:")) {
-      return token.category === candidate.slice(9)
-    }
-    return token.lexeme === candidate
+function addToPalette(id, currentColor, tokenStream, swatchCount) {
+  while (
+    currentColor != undefined &&
+    swatches.get(currentColor) == undefined &&
+    swatchCount <= 5
+  ) {
+    swatchCount++;
+    palettes.get(id).swatches = swatchCount;
+    swatches.set(currentColor, {
+      palette: id,
+      operator: operators[swatchCount - 1],
+    });
+    currentColor = tokenStream.next().value;
   }
 
-  function match(expected) {
-    // Advances iff we’re at a token we want to be at
-    if (expected === undefined || at(expected)) {
-      const matchedToken = token
-      token = tokenStream.next().value
-      return matchedToken
+  return currentColor;
+}
+
+function pushAssignment(target, operand1, operator, operand2) {
+  statements.push(
+    new Assignment(target, new BinaryExpression(operator, operand1, operand2))
+  );
+}
+
+function parseStatements(tokenStream) {
+  let colorA = tokenStream.next().value;
+
+  while (colorA != undefined) {
+    let swatchA = swatches.get(colorA);
+
+    if (swatchA == undefined) {
+      let colorB = tokenStream.next().value;
+      let swatchB = swatches.get(colorB);
+
+      if (swatchB == undefined) {
+        let newPaletteID = "P" + palettes.size;
+
+        //start palette
+        swatches.set(colorA, {
+          palette: newPaletteID,
+          operator: operators[0],
+        });
+
+        palettes.set(newPaletteID, { swatches: 1 });
+        statements.push(new Assignment(newPaletteID, 0));
+
+        //define new swatchess and go back to top
+        colorA = addToPalette(newPaletteID, colorB, tokenStream, 1);
+      } else {
+        //swatchB is defined
+        //back to top without consuming colorB
+        colorA = colorB;
+      }
+    } else if (swatchA.operator != "*") {
+      let operand = swatchA.palette;
+      switch (swatchA.operator) {
+        case "P": //print
+          statements.push(new Call("print", operand));
+          break;
+        case "+": //++
+          pushAssignment(operand, operand, "+", 1);
+          break;
+        case "-": //--
+          pushAssignment(operand, operand, "-", 1);
+          break;
+        case "j": //jmp
+          statements.push(new Call("goto", operand));
+          break;
+      }
+      //back to top
+      colorA = tokenStream.next().value;
+    } else {
+      //swatchA.operator == "*"
+      let operandA = swatchA.palette;
+      let paletteA = palettes.get(operandA);
+
+      //look at next color
+      let colorB = tokenStream.next().value;
+      if (colorB != undefined) {
+        let swatchB = swatches.get(colorB);
+        if (swatchB == undefined) {
+          let swatchCount = paletteA.swatches;
+          if (swatchCount < 5) {
+            //define new swatches and go back to top
+            colorA = addToPalette(paletteA, swatchB, tokenStream, swatchCount);
+          } else {
+            statements.push(new Call("print", swatchA.palette));
+            //print
+            //back to top without consuming colorB
+            colorA = colorB;
+          }
+        } else {
+          //swachB is defined
+          let operandB = swatchB.palette;
+          if (swatchB.operator != "P") {
+            switch (swatchB.operator) {
+              case "+": //escape
+                break;
+              case "-": //-=
+                statements.push(new Assignment(operandA, operandB));
+                break;
+              case "j": //if jmp
+                statements.push(new Call("gotoIf", [operandA, operandB]));
+                break;
+            }
+            // back to top
+            colorA = tokenStream.next().value;
+          } else {
+            //swatchB.operator == "P"
+            //look at next color
+            let colorC = tokenStream.next().value;
+
+            if (colorC != undefined) {
+              let swatchC = swatches.get(colorC);
+              if (swatchC != undefined) {
+                let operandC = swatchC.palette;
+                switch (swatchC.operator) {
+                  case "+": //+
+                    pushAssignment(paletteA, operandB, "+", operandC);
+                    break;
+                  case "-": //-
+                    pushAssignment(paletteA, operandB, "-", operandC);
+                    break;
+                  case "*": //*
+                    pushAssignment(paletteA, operandB, "*", operandC);
+                    break;
+                  case "j": ///
+                    pushAssignment(paletteA, operandB, "/", operandC);
+                    break;
+                }
+                //back to top
+                colorA = tokenStream.next().value;
+              } else {
+                //current swatchC is undefined
+                //look at next swatch and make it new swatchC
+                colorC = tokenStream.next().value;
+                let swatchC = swatches.get(colorC);
+
+                if (swatchC != undefined) {
+                  let operandC = swatchC.palette;
+                  switch (swatchC.operator) {
+                    case "*": //**
+                      pushAssignment(paletteA, operandB, "^", operandC);
+                      break;
+                    case "j": //%
+                      pushAssignment(paletteA, operandB, "%", operandC);
+                      break;
+                    case "+": //nothing yet
+                      break;
+                    case "-": //nothing yet
+                      break;
+                  }
+                  //back to top
+                  colorA = tokenStream.next().value;
+                }
+                //back to top without consuming colorC
+                colorA = colorC;
+              }
+            }
+            //*P followed by nothing
+            //back to top without consuming colorC
+            //will exit loop
+            colorA = colorC;
+          }
+        }
+      }
+      //* followed by nothing
+      //back to top without consuming colorB
+      //will exit loop
+      colorA = colorB;
     }
-    error(`Expected '${expected}'`, token)
   }
-
-  // function parseProgram() {
-  //   const statements = []
-  //   do {
-  //     statements.push(parseStatement())
-  //     match(";")
-  //   } while (!at("Category:End"))
-  //   return new Program(statements)
-  // }
-
-  // to seperate the program
-
-  // function parseStatement() {
-  //   if (at("Category:Id")) {
-  //     const id = match()
-  //     if (at("=")) {
-  //       match()
-  //       return new Assignment(id, parseExpression())
-  //     } else if (at("(")) {
-  //       return new Call(id, parseArgs(), true)
-  //     }
-  //     error(`"=" or "(" expected`, token)
-  //   }
-  //   error("Statement expected", token)
-  // }
-
-  // function parseExpression() {
-  //   let left = parseTerm()
-  //   while (at(["+", "-"])) {
-  //     const op = match()
-  //     const right = parseTerm()
-  //     left = new BinaryExpression(op, left, right)
-  //   }
-  //   return left
-  // }
-
-  // function parseTerm() {
-  //   let left = parseFactor()
-  //   while (at(["*", "/", "%"])) {
-  //     const op = match()
-  //     const right = parseFactor()
-  //     left = new BinaryExpression(op, left, right)
-  //   }
-  //   return left
-  // }
-
-  // function parseFactor() {
-  //   let left = parsePrimary()
-  //   if (at("**")) {
-  //     const op = match()
-  //     const right = parseFactor()
-  //     left = new BinaryExpression(op, left, right)
-  //   }
-  //   return left
-  // }
-
-  // function parsePrimary() {
-  //   if (at("Category:Num")) {
-  //     return match()
-  //   } else if (at("Category:Id")) {
-  //     const id = match()
-  //     return at("(") ? new Call(id, parseArgs(), false) : id
-  //   } else if (at("-")) {
-  //     const op = match()
-  //     return new UnaryExpression(op, parsePrimary())
-  //   } else if (at("(")) {
-  //     match()
-  //     const e = parseExpression()
-  //     match(")")
-  //     return e
-  //   }
-  //   error("Expected id, number, or '('", token)
-  // }
-
-  // function parseArgs() {
-  //   match("(")
-  //   const args = []
-  //   if (!at(")")) {
-  //     args.push(parseExpression())
-  //     while (at(",")) {
-  //       match()
-  //       args.push(parseExpression())
-  //     }
-  //   }
-  //   match(")")
-  //   return args
-  // }
-
-  // return parseProgram()
 }
