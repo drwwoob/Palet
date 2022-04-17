@@ -63,90 +63,92 @@ export default function parse(tokenStream) {
     error(`Expected '${expected}'`, token)
   }
 
-  function parseProgram() {
-    const statements = []
-    do {
-      statements.push(parseStatement())
-      match(";")
-    } while (!at("Category:End"))
-    return new Program(statements)
-  }
+  // function parseProgram() {
+  //   const statements = []
+  //   do {
+  //     statements.push(parseStatement())
+  //     match(";")
+  //   } while (!at("Category:End"))
+  //   return new Program(statements)
+  // }
 
-  function parseStatement() {
-    if (at("Category:Id")) {
-      const id = match()
-      if (at("=")) {
-        match()
-        return new Assignment(id, parseExpression())
-      } else if (at("(")) {
-        return new Call(id, parseArgs(), true)
-      }
-      error(`"=" or "(" expected`, token)
-    }
-    error("Statement expected", token)
-  }
+  // to seperate the program
 
-  function parseExpression() {
-    let left = parseTerm()
-    while (at(["+", "-"])) {
-      const op = match()
-      const right = parseTerm()
-      left = new BinaryExpression(op, left, right)
-    }
-    return left
-  }
+  // function parseStatement() {
+  //   if (at("Category:Id")) {
+  //     const id = match()
+  //     if (at("=")) {
+  //       match()
+  //       return new Assignment(id, parseExpression())
+  //     } else if (at("(")) {
+  //       return new Call(id, parseArgs(), true)
+  //     }
+  //     error(`"=" or "(" expected`, token)
+  //   }
+  //   error("Statement expected", token)
+  // }
 
-  function parseTerm() {
-    let left = parseFactor()
-    while (at(["*", "/", "%"])) {
-      const op = match()
-      const right = parseFactor()
-      left = new BinaryExpression(op, left, right)
-    }
-    return left
-  }
+  // function parseExpression() {
+  //   let left = parseTerm()
+  //   while (at(["+", "-"])) {
+  //     const op = match()
+  //     const right = parseTerm()
+  //     left = new BinaryExpression(op, left, right)
+  //   }
+  //   return left
+  // }
 
-  function parseFactor() {
-    let left = parsePrimary()
-    if (at("**")) {
-      const op = match()
-      const right = parseFactor()
-      left = new BinaryExpression(op, left, right)
-    }
-    return left
-  }
+  // function parseTerm() {
+  //   let left = parseFactor()
+  //   while (at(["*", "/", "%"])) {
+  //     const op = match()
+  //     const right = parseFactor()
+  //     left = new BinaryExpression(op, left, right)
+  //   }
+  //   return left
+  // }
 
-  function parsePrimary() {
-    if (at("Category:Num")) {
-      return match()
-    } else if (at("Category:Id")) {
-      const id = match()
-      return at("(") ? new Call(id, parseArgs(), false) : id
-    } else if (at("-")) {
-      const op = match()
-      return new UnaryExpression(op, parsePrimary())
-    } else if (at("(")) {
-      match()
-      const e = parseExpression()
-      match(")")
-      return e
-    }
-    error("Expected id, number, or '('", token)
-  }
+  // function parseFactor() {
+  //   let left = parsePrimary()
+  //   if (at("**")) {
+  //     const op = match()
+  //     const right = parseFactor()
+  //     left = new BinaryExpression(op, left, right)
+  //   }
+  //   return left
+  // }
 
-  function parseArgs() {
-    match("(")
-    const args = []
-    if (!at(")")) {
-      args.push(parseExpression())
-      while (at(",")) {
-        match()
-        args.push(parseExpression())
-      }
-    }
-    match(")")
-    return args
-  }
+  // function parsePrimary() {
+  //   if (at("Category:Num")) {
+  //     return match()
+  //   } else if (at("Category:Id")) {
+  //     const id = match()
+  //     return at("(") ? new Call(id, parseArgs(), false) : id
+  //   } else if (at("-")) {
+  //     const op = match()
+  //     return new UnaryExpression(op, parsePrimary())
+  //   } else if (at("(")) {
+  //     match()
+  //     const e = parseExpression()
+  //     match(")")
+  //     return e
+  //   }
+  //   error("Expected id, number, or '('", token)
+  // }
 
-  return parseProgram()
+  // function parseArgs() {
+  //   match("(")
+  //   const args = []
+  //   if (!at(")")) {
+  //     args.push(parseExpression())
+  //     while (at(",")) {
+  //       match()
+  //       args.push(parseExpression())
+  //     }
+  //   }
+  //   match(")")
+  //   return args
+  // }
+
+  // return parseProgram()
 }

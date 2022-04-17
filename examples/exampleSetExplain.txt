@@ -1,0 +1,86 @@
+//define registers
+red1
+(blank)
+red1, red2
+*p
+red1, red2, red3
+*p+
+red1, red2, red3, red4
+*p+-
+red1, red2, red3, red4, red5
+*p+-J
+red1, red2, red3, red4, red5, pink
+*p+-J
+red1, red2, red3, red4, red5, red1, pink
+*p+-J*
+(should the * at the end of a complete constructor always be there?)
+red1, red2, red3, red4, red5, orange1, orange2
+*p+-J *p
+red1, red2, red3, red4, red5, red1, orange1, orange2
+*p+-J* *p
+
+//break
+red1, red2, red3, red1, red3
+*p+ break
+red1, red2, red3, red4, red1, red3
+*p+- break
+red1, red2, red3, red4, red5, red1, red3
+*p+-J break
+(should the break just do nothing?)
+red1, red2, red3, red1, red3, red1, red3
+*p+ break break
+red1, red2, red3, red1, red3, orange1, orange2
+*p+ break *p
+
+//add more colors to a register
+(?)
+red1, red2, red3, red1, red3, blue1, blue2
+*p+ break (add to r1)-
+red1, red2, red3, red1, red3, blue1, blue2
+
+//test a single operand
+red1, red2, red3, red4, red5, red1, red2
+*p+-J* p
+*p+-J print(r1)
+red1, red2, red3, red4, red5, red1, red3
+*p+-J* +
+*p+-J ++
+red1, red2, red3, red4, red5, red1, red4
+*p+-J* -
+*p+-J --
+red1, red2, red3, red4, red5, red1, red5
+*p+-J* J
+*p+-J jump(r1)
+(i'm not too sure how this work)
+
+//test two operands in a single register combined
+red1, red2, red3, red4, red5, red1, yellow, red1, red4
+*p+-J* *-
+*p+-J r1 = r1
+red1, red2, red3, red4, red5, red1, yellow, red1, red5
+*p+-J* *J
+*p+-J if(r1 <= 0) jump r1
+
+//test three operands in a single register conbined
+red1, red2, red3, red4, red5, red1, yellow, red3, red1, red2, red3
+*p+-J* r1++ *p+
+*p+-J r1 = r1 + r1
+red1, red2, red3, red4, red5, red1, yellow, red3, red1, red2, red4
+*p+-J* r1++ *p-
+*p+-J r1 = r1 - r1
+red1, red2, red3, red4, red5, red1, yellow, red3, red1, red2, red1
+*p+-J* r1++ *p*
+*p+-J r1 = r1 * r1
+red1, red2, red3, red4, red5, red1, yellow, red3, red1, red2, red5
+*p+-J* r1++ *p*
+*p+-J r1 = r1 * r1
+
+//test four operands in a single register conbined
+
+//special case within this
+red1, red2, red3, red4 ,red5, red1, yellow, red1, red2, green1, green2
+*p+-J* *p(?1)(?2)
+whill this be -> *p+-J 
+(what will the outcome of this be?)
+
+//test two operands located in two operan
