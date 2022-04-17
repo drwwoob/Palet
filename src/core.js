@@ -46,9 +46,3 @@ export const standardLibrary = Object.freeze({
   print: new Function("goto", 1, true, false),
   print: new Function("gotoIf", 2, true, false),
 });
-
-export class Color {
-  constructor(name){
-    Object.assign(this, {name});
-  }
-}
