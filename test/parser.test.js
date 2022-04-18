@@ -1,6 +1,6 @@
 import assert from "assert/strict"
 import util from "util"
-import {parse, clearStatement} from "../src/parser.js"
+import {parse, clear} from "../src/parser.js"
 import tokenize from "../src/lexer.js"
 import { Program, Assignment, BinaryExpression, Call } from "../src/core.js";
 
@@ -14,14 +14,14 @@ describe('The differentiator', () => {
 
 // define register
 const defineReg = [
-  ["single color", "red1", new Program([])],
+  //["single color", "red1", new Program([])],
   ["*p", "red1, red2", new Program([new Assignment("P0", 0)])],
-  ["*p+", "red1, red2, red3", new Program()],
-  ["*p+-", "red1, red2, red3, red4", new Program()],
-  ["*p+-J", "red1, red2, red3, red4, red5", new Program()],
-  ["*p+-J", "red1, red2, red3, red4, red5, pink", new Program()],
-  ["*p+-J*", "red1, red2, red3, red4, red5, red1, pink", new Program()],
-  ["*p+-J *p", "red1, red2, red3, red4, red5, orange1, orange2", new Program()],
+  ["*p+", "red1, red2, red3", new Program([new Assignment("P0", 0)])],
+ ["*p+-", "red1, red2, red3, red4", new Program([new Assignment("P0", 0)])],
+ ["*p+-J", "red1, red2, red3, red4, red5", new Program([new Assignment("P0", 0)])],
+ ["*p+-J", "red1, red2, red3, red4, red5, pink", new Program([new Assignment("P0", 0)])],
+ //["*p+-J*", "red1, red2, red3, red4, red5, red1, pink", new Program([new Assignment("P0", 0)])],
+ ["*p+-J *p", "red1, red2, red3, red4, red5, orange1, orange2", new Program([new Assignment("P0", 0), new Assignment("P1", 0)])],
 ]
 
 // the test
@@ -29,7 +29,7 @@ describe("The parser can recognize a list of different colors and create registe
     for (const [translation, source, expected] of defineReg) {
       it(`recognizes ${translation}`, () =>{
         assert.deepEqual(parse(tokenize(source)), expected);
-        clearStatement();
+        clear();
       })
     }
   })

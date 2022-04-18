@@ -43,17 +43,13 @@ function pushAssignment(target, operand1, operator, operand2) {
 
 function parseStatements(tokenStream) {
   let colorA = tokenStream.next().value;
-  console.log("colorA:" + colorA)
 
   while (colorA != undefined) {
     let swatchA = swatches.get(colorA);
-    console.log("colorA defined?")
 
     //if color A is a new color
     if (swatchA == undefined) {
-      console.log("colorA undefined");
       let colorB = tokenStream.next().value;
-      console.log("colorB:" + colorB)
       // if(colorB){
       //   return;
       // }
@@ -71,7 +67,6 @@ function parseStatements(tokenStream) {
 
         palettes.set(newPaletteID, { swatches: 1 });
         statements.push(new Assignment(newPaletteID, 0));
-        console.log("pushed statement:" + statements);
 
 
         //define new swatchess and go back to top
@@ -203,7 +198,8 @@ function parseStatements(tokenStream) {
 }
 
 //for test purpose
-export function clearStatement(){
-  statements = [];
-  console.log("statement:" + statements);
+export function clear(){
+  statements.length = 0;
+  swatches.clear();
+  palettes.clear();
 }
