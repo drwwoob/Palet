@@ -36,20 +36,19 @@ red1, red2, red3, red1, red3, orange1, orange2
 (?)
 red1, red2, red3, red1, red3, red1, red4
 *p+ break (add to r1)-
-red1, red2, red3, red1, red3, blue1, blue2
 
 //test a single operand
-red1, red2, red3, red4, red5, red1, red2
-*p+-J* p
+red1, red2, red3, red4, red5, red2
+*p+-J p
 *p+-J print(r1)
-red1, red2, red3, red4, red5, red1, red3
-*p+-J* +
+red1, red2, red3, red4, red5, red3
+*p+-J +
 *p+-J ++
-red1, red2, red3, red4, red5, red1, red4
-*p+-J* -
+red1, red2, red3, red4, red5, red4
+*p+-J -
 *p+-J --
-red1, red2, red3, red4, red5, red1, red5
-*p+-J* J
+red1, red2, red3, red4, red5, red5
+*p+-J J
 *p+-J jump(r1)
 (i'm not too sure how this work)
 

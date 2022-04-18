@@ -1,6 +1,6 @@
 import assert from "assert/strict"
 import util from "util"
-import {parse, clear} from "../src/parser.js"
+import {parse, clearStatement, clear} from "../src/parser.js"
 import tokenize from "../src/lexer.js"
 import { Program, Assignment, BinaryExpression, Call } from "../src/core.js";
 
@@ -64,6 +64,30 @@ describe("The parser is able to add color to a register", () => {
     })
   }
 })
+
+const singleOp = [
+  ["+", "*p+-J +", "red1, red2, red3, red4, red5, red3",
+    new Program([new Assignment("P0", 0), new Assignment("P0", new BinaryExpression("+", "P0", 1))])],
+  ["-", "*p+-J -", "red1, red2, red3, red4, red5, red4", 
+    new Program([new Assignment("P0", 0), new Assignment("P0", new BinaryExpression("-", "P0", 1))])],
+ ]
+
+describe("The parser is able to execute a single operator", () => {
+  for (const [operand, translation, source, expected] of singleOp) {
+    it(`test operand \"${operand}\" using the command ${translation}`, () =>{
+      clear();
+      assert.deepEqual(parse(tokenize(source)), expected);
+    })
+  }
+  clear();
+})
+
+const singleCall = [
+  ["P", "*p+-J p", "red1, red2, red3, red4, red5, red2",
+  new Program([new Assignment("P0", 0), new Assignment("P0", new Call("print", "P0"))])],
+  ["J", "*p+-J J", "red1, red2, red3, red4, red5, pink, red5", 
+    new Program([new Assignment("P0", 0), new Assignment("P0", new BinaryExpression("goto", "P0"))])],
+]
 
 // const syntaxErrors = [
 //   [

@@ -8,7 +8,7 @@ const swatches = new Map(); //map swatch to register and oprator
 //Palette: a map that stores all registers(which here is called swatch)
 const palettes = new Map(); //map palette to value and size (register)
 
-const statements = [];
+let statements = [];
 
 export function parse(tokenStream) {
   parseStatements(tokenStream);
@@ -144,6 +144,7 @@ function parseStatements(tokenStream) {
                     pushAssignment(paletteA, operandB, "+", operandC);
                     break;
                   case "-": //-
+                  console.log("it showed minus");
                     pushAssignment(paletteA, operandB, "-", operandC);
                     break;
                   case "*": //*
@@ -197,9 +198,15 @@ function parseStatements(tokenStream) {
   }
 }
 
+export function clearStatement(){
+  statements = [];
+  console.log("cleaning statement!");
+  console.log("statement:" + statements);
+}
+
 //for test purpose
 export function clear(){
-  statements.length = 0;
+  statements = [];
   swatches.clear();
   palettes.clear();
 }
