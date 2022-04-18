@@ -53,11 +53,11 @@ red1, red2, red3, red4, red5, red5
 (i'm not too sure how this work)
 
 //test two operands in a single register combined
-red1, red2, red3, red4, red5, red1, yellow, red1, red4
-*p+-J* *-
+red1, red2, red3, red4, red5, red1, red4
+*p+-J *-
 *p+-J r1 = r1
-red1, red2, red3, red4, red5, red1, yellow, red1, red5
-*p+-J* *J
+red1, red2, red3, red4, red5, red1, red5
+*p+-J *J
 *p+-J if(r1 <= 0) jump r1
 
 //test three operands in a single register conbined

@@ -19,7 +19,7 @@ const defineReg = [
   ["*p+", "red1, red2, red3", new Program([new Assignment("P0", 0)])],
   ["*p+-", "red1, red2, red3, red4", new Program([new Assignment("P0", 0)])],
   ["*p+-J", "red1, red2, red3, red4, red5", new Program([new Assignment("P0", 0)])],
-  ["*p+-J blank", "red1, red2, red3, red4, red5, pink", new Program([new Assignment("P0", 0)])],
+  ["*p+-J ?", "red1, red2, red3, red4, red5, pink", new Program([new Assignment("P0", 0)])],
   //["*p+-J*", "red1, red2, red3, red4, red5, red1, pink", new Program([new Assignment("P0", 0)])],
   ["*p+-J *p", "red1, red2, red3, red4, red5, orange1, orange2", new Program([new Assignment("P0", 0), new Assignment("P1", 0)])],
 ]
@@ -84,7 +84,7 @@ describe("The parser is able to execute a single binary operator", () => {
 const singleCall = [
   ["P", "*p+-J p", "red1, red2, red3, red4, red5, red2",
   new Program([new Assignment("P0", 0),  new Call("print", "P0")])],
-  ["J", "*p+-J J", "red1, red2, red3, red4, red5, pink, red5", 
+  ["J", "*p+-J ? J", "red1, red2, red3, red4, red5, pink, red5", 
     new Program([new Assignment("P0", 0), new Call("goto", "P0")])],
 ]
 
@@ -97,90 +97,30 @@ describe("The parser is able to execute a single call", () => {
   }
 })
 
+const specialCasePrint = [
+  ["*p+-J *?", "red1, red2, red3, red4, red5, red1, pink",
+    new Program([new Assignment("P0", 0), new Call("print", "P0")])],
+]
 
+describe("The parser is able to print with *?", () => {
+  for (const [translation, source, expected] of specialCasePrint) {
+    it(`recognizes ${translation}`, () =>{
+      assert.deepEqual(parse(tokenize(source)), expected);
+      clear();
+    })
+  }
+})
 
+const duaInSingle = [
+  ["=","*p+-J *-", "red1, red2, red3, red4, red5, yellow, red1, red4",
+    new Program([new Assignment("P0", 0), new Assignment("P0", "P0")])],
+]
 
-
-// const syntaxErrors = [
-//   [
-//     "non-letter in an identifier",
-//     "ab😭c = 2",
-//     /Line 1, Column 2: Unexpected character: '😭'/,
-//   ],
-//   ["malformed number", "x= 2.", /Line 1, Column 6: Digit expected/],
-//   ["missing semicolon", "x = 3 y = 1", /Line 1, Column 7: Expected ';'/],
-//   [
-//     "a missing right operand",
-//     "print(5 -",
-//     /Line 2, Column 1: Expected id, number, or '\('/,
-//   ],
-//   [
-//     "a non-operator",
-//     "print(7 * ((2 _ 3)",
-//     /Line 1, Column 14: Unexpected character: '_'/,
-//   ],
-//   [
-//     "an expression starting with a )",
-//     "x = );",
-//     /Line 1, Column 5: Expected id, number, or '\('/,
-//   ],
-//   [
-//     "a statement starting with expression",
-//     "x * 5;",
-//     /Error: Line 1, Column 3: "=" or "\(" expected/,
-//   ],
-//   [
-//     "an illegal statement on line 2",
-//     "print(5);\nx * 5;",
-//     /Line 2, Column 3: "=" or "\(" expected/,
-//   ],
-//   [
-//     "a statement starting with a )",
-//     "print(5);\n) * 5",
-//     /Line 2, Column 1: Statement expected/,
-//   ],
-//   [
-//     "an expression starting with a *",
-//     "x = * 71;",
-//     /Line 1, Column 5: Expected id, number, or '\('/,
-//   ],
-// ]
-
-// const source = `x=-1;print(x**5);`
-
-// const expectedAst = new core.Program([
-//   new core.Assignment(
-//     new core.Token("Id", "x", 1, 1),
-//     new core.UnaryExpression(
-//       new core.Token("Sym", "-", 1, 3),
-//       new core.Token("Num", "1", 1, 4)
-//     )
-//   ),
-//   new core.Call(
-//     new core.Token("Id", "print", 1, 6),
-//     [
-//       new core.BinaryExpression(
-//         new core.Token("Sym", "**", 1, 13),
-//         new core.Token("Id", "x", 1, 12),
-//         new core.Token("Num", "5", 1, 15)
-//       ),
-//     ],
-//     true
-//   ),
-// ])
-
-// describe("The parser", () => {
-//   for (const [scenario, source] of syntaxChecks) {
-//     it(`recognizes that ${scenario}`, () => {
-//       assert(parse(tokenize(source)))
-//     })
-//   }
-//   for (const [scenario, source, errorMessagePattern] of syntaxErrors) {
-//     it(`throws on ${scenario}`, () => {
-//       assert.throws(() => parse(tokenize(source)), errorMessagePattern)
-//     })
-//   }
-//   it("produces the expected AST for all node types", () => {
-//     assert.deepEqual(parse(tokenize(source)), expectedAst)
-//   })
-// })
+describe("The parser is able to execute a two-operator operation that's located in a single register", () => {
+  for (const [operand, translation, source, expected] of duaInSingle) {
+    it(`test operand \"${operand}\" using the command ${translation}`, () =>{
+      assert.deepEqual(parse(tokenize(source)), expected);
+      clear();
+    })
+  }
+})

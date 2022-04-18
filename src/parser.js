@@ -1,6 +1,6 @@
 import { Program, Assignment, BinaryExpression, Call } from "./core.js";
 
-const operators = ["*", "P", "+", "-", "J"];
+const operators = ["*", "P", "+", "-", "j"];
 
 //swatches: a map that stores all colors with its corresponding register and operator
 //storing format: color : {PaletteID, operator}
@@ -45,7 +45,7 @@ function parseStatements(tokenStream) {
 
   while (colorA != undefined) {
     let swatchA = swatches.get(colorA);
-
+    
     //if color A is a new color
     if (swatchA == undefined) {
       let colorB = tokenStream.next().value;
@@ -53,9 +53,6 @@ function parseStatements(tokenStream) {
         colorA = colorB;
         break;
       }
-      // if(colorB){
-      //   return;
-      // }
       let swatchB = swatches.get(colorB);
 
       //if there are two unseen colors in a row, create new register
@@ -77,7 +74,6 @@ function parseStatements(tokenStream) {
       } else {
         //swatchB is defined
         //back to top without consuming colorB
-        console.log("did not meet");
         colorA = colorB;
       }
     } else if (swatchA.operator != "*") {
@@ -85,17 +81,16 @@ function parseStatements(tokenStream) {
       let operand = swatchA.palette;
       switch (swatchA.operator) {
         case "P": //print
+          console.log("is at print");
           statements.push(new Call("print", operand));
           break;
         case "+": //++
-          console.log("it should be at " + swatchA.operator);
-          pushAssignment(operand, operand, "+", 1);
+         pushAssignment(operand, operand, "+", 1);
           break;
         case "-": //--
           pushAssignment(operand, operand, "-", 1);
           break;
         case "j": //jmp
-        console.log("it is at " + swatchA.operator);
           statements.push(new Call("goto", operand));
           break;
       }
@@ -113,6 +108,7 @@ function parseStatements(tokenStream) {
         if (swatchB == undefined) {
           let swatchCount = paletteA.swatches;
           if (swatchCount < 5) {
+            console.log("did it added");
             //define new swatches and go back to top
             colorB = addToPalette(paletteA, swatchB, tokenStream, swatchCount);
           } else {
@@ -128,7 +124,7 @@ function parseStatements(tokenStream) {
             switch (swatchB.operator) {
               case "+": //escape
                 break;
-              case "-": //-=
+              case "-": //=
                 statements.push(new Assignment(operandA, operandB));
                 break;
               case "j": //if jmp
@@ -151,7 +147,6 @@ function parseStatements(tokenStream) {
                     pushAssignment(paletteA, operandB, "+", operandC);
                     break;
                   case "-": //-
-                  console.log("it showed minus");
                     pushAssignment(paletteA, operandB, "-", operandC);
                     break;
                   case "*": //*
@@ -207,8 +202,6 @@ function parseStatements(tokenStream) {
 
 export function clearStatement(){
   statements.length = 0;
-  console.log("cleaning statement!");
-  console.log("statement:" + statements);
 }
 
 //for test purpose
