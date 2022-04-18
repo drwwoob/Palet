@@ -83,12 +83,14 @@ function parseStatements(tokenStream) {
           statements.push(new Call("print", operand));
           break;
         case "+": //++
+          console.log("it should be at J");
           pushAssignment(operand, operand, "+", 1);
           break;
         case "-": //--
           pushAssignment(operand, operand, "-", 1);
           break;
         case "j": //jmp
+        console.log("it is at J");
           statements.push(new Call("goto", operand));
           break;
       }
@@ -199,7 +201,7 @@ function parseStatements(tokenStream) {
 }
 
 export function clearStatement(){
-  statements = [];
+  statements.length = 0;
   console.log("cleaning statement!");
   console.log("statement:" + statements);
 }

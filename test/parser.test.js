@@ -24,7 +24,7 @@ const defineReg = [
   ["*p+-J *p", "red1, red2, red3, red4, red5, orange1, orange2", new Program([new Assignment("P0", 0), new Assignment("P1", 0)])],
 ]
 
-// the test
+
 describe("The parser can recognize a list of different colors and create register", () => {
   for (const [translation, source, expected] of defineReg) {
     it(`recognizes ${translation}`, () =>{
@@ -72,7 +72,7 @@ const singleOp = [
     new Program([new Assignment("P0", 0), new Assignment("P0", new BinaryExpression("-", "P0", 1))])],
  ]
 
-describe("The parser is able to execute a single operator", () => {
+describe("The parser is able to execute a single binary operator", () => {
   for (const [operand, translation, source, expected] of singleOp) {
     it(`test operand \"${operand}\" using the command ${translation}`, () =>{
       clear();
@@ -84,11 +84,19 @@ describe("The parser is able to execute a single operator", () => {
 
 const singleCall = [
   ["P", "*p+-J p", "red1, red2, red3, red4, red5, red2",
-  new Program([new Assignment("P0", 0), new Assignment("P0", new Call("print", "P0"))])],
+  new Program([new Assignment("P0", 0),  new Call("print", "P0")])],
   ["J", "*p+-J J", "red1, red2, red3, red4, red5, pink, red5", 
-    new Program([new Assignment("P0", 0), new Assignment("P0", new BinaryExpression("goto", "P0"))])],
+    new Program([new Assignment("P0", 0), new Call("goto", "P0")])],
 ]
 
+describe("The parser is able to execute a single call", () => {
+  for (const [operand, translation, source, expected] of singleCall) {
+    it(`test operand \"${operand}\" using the command ${translation}`, () =>{
+      assert.deepEqual(parse(tokenize(source)), expected);
+      clear();
+    })
+  }
+})
 // const syntaxErrors = [
 //   [
 //     "non-letter in an identifier",
