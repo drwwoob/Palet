@@ -14,22 +14,28 @@ describe('The differentiator', () => {
 
 // define register
 const defineReg = [
-  ["red1", new Program()],
-  ["red1, red2", new Program()],
-  ["red1, red2, red3", new Program()],
-  ["red1, red2, red3, red4", new Program()],
-  ["red1, red2, red3, red4, red5", new Program()],
-  ["red1, red2, red3, red4, red5, pink", new Program()],
-  ["red1, red2, red3, red4, red5, red1, pink", new Program()],
-  ["red1, red2, red3, red4, red5, orange1, orange2", new Program()],
+  ["single color", "red1", new Program([])],
+  ["*p", "red1, red2", new Program([new Assignment(0, 0)])],
+  ["*p+", "red1, red2, red3", new Program()],
+  ["*p+-", "red1, red2, red3, red4", new Program()],
+  ["*p+-J", "red1, red2, red3, red4, red5", new Program()],
+  ["*p+-J", "red1, red2, red3, red4, red5, pink", new Program()],
+  ["*p+-J*", "red1, red2, red3, red4, red5, red1, pink", new Program()],
+  ["*p+-J *p", "red1, red2, red3, red4, red5, orange1, orange2", new Program()],
 ]
 
 // the test
 describe("The parser can recognize a list of different colors", () => {
-    for (const [source, expected] of defineReg) {
+    for (const [translation, source, expected] of defineReg) {
+      it(`recognizes ${translation}`, () =>{
         assert.deepEqual(parse(tokenize(source)), expected)
+      })
     }
-})
+  })
+//for (const [scenario, source] of syntaxChecks) {
+  //     it(`recognizes ${source}`, () => {
+  //       assert.deepEqual(parse(tokenize(source)), expected)}
+  //     })
 // const syntaxChecks = [
 //   ["all numeric literal forms", "print(8 * 89.123);"],
 //   ["complex expressions", "print(83 * ((((((((-13 / 21)))))))) + 1 - -0);"],

@@ -43,10 +43,15 @@ function parseStatements(tokenStream) {
   while (colorA != undefined) {
     let swatchA = swatches.get(colorA);
 
+    //if color A is a new color
     if (swatchA == undefined) {
       let colorB = tokenStream.next().value;
+      // if(colorB){
+      //   return;
+      // }
       let swatchB = swatches.get(colorB);
 
+      //if there are two unseen colors in a row, create new register
       if (swatchB == undefined) {
         let newPaletteID = "P" + palettes.size;
 
