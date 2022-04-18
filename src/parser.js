@@ -17,7 +17,6 @@ export function parse(tokenStream) {
 
 //to create a new register
 function addToPalette(id, currentColor, tokenStream, swatchCount) {
-  console.log(currentColor + swatchCount);
   while (
     currentColor &&
     !swatches.get(currentColor) &&
@@ -77,6 +76,7 @@ function parseStatements(tokenStream) {
         colorA = colorB;
       }
     } else if (swatchA.operator != "*") {
+      //single operator
       let operand = swatchA.palette;
       switch (swatchA.operator) {
         case "P": //print
@@ -129,7 +129,7 @@ function parseStatements(tokenStream) {
                 break;
             }
             // back to top
-            colorA = tokenStream.next().value;
+            colorB = tokenStream.next().value;
           } else {
             //swatchB.operator == "P"
             //look at next color
@@ -149,7 +149,7 @@ function parseStatements(tokenStream) {
                   case "*": //*
                     pushAssignment(paletteA, operandB, "*", operandC);
                     break;
-                  case "j": ///
+                  case "j": // /
                     pushAssignment(paletteA, operandB, "/", operandC);
                     break;
                 }

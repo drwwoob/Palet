@@ -17,33 +17,40 @@ const defineReg = [
   //["single color", "red1", new Program([])],
   ["*p", "red1, red2", new Program([new Assignment("P0", 0)])],
   ["*p+", "red1, red2, red3", new Program([new Assignment("P0", 0)])],
- ["*p+-", "red1, red2, red3, red4", new Program([new Assignment("P0", 0)])],
- ["*p+-J", "red1, red2, red3, red4, red5", new Program([new Assignment("P0", 0)])],
- ["*p+-J", "red1, red2, red3, red4, red5, pink", new Program([new Assignment("P0", 0)])],
- //["*p+-J*", "red1, red2, red3, red4, red5, red1, pink", new Program([new Assignment("P0", 0)])],
- ["*p+-J *p", "red1, red2, red3, red4, red5, orange1, orange2", new Program([new Assignment("P0", 0), new Assignment("P1", 0)])],
+  ["*p+-", "red1, red2, red3, red4", new Program([new Assignment("P0", 0)])],
+  ["*p+-J", "red1, red2, red3, red4, red5", new Program([new Assignment("P0", 0)])],
+  ["*p+-J", "red1, red2, red3, red4, red5, pink", new Program([new Assignment("P0", 0)])],
+  //["*p+-J*", "red1, red2, red3, red4, red5, red1, pink", new Program([new Assignment("P0", 0)])],
+  ["*p+-J *p", "red1, red2, red3, red4, red5, orange1, orange2", new Program([new Assignment("P0", 0), new Assignment("P1", 0)])],
 ]
 
 // the test
 describe("The parser can recognize a list of different colors and create register", () => {
-    for (const [translation, source, expected] of defineReg) {
-      it(`recognizes ${translation}`, () =>{
-        assert.deepEqual(parse(tokenize(source)), expected);
-        clear();
-      })
-    }
-  })
-//for (const [scenario, source] of syntaxChecks) {
-  //     it(`recognizes ${source}`, () => {
-  //       assert.deepEqual(parse(tokenize(source)), expected)}
-  //     })
-// const syntaxChecks = [
-//   ["all numeric literal forms", "print(8 * 89.123);"],
-//   ["complex expressions", "print(83 * ((((((((-13 / 21)))))))) + 1 - -0);"],
-//   ["end of program inside comment", "print(0); // yay"],
-//   ["comments with no text", "print(1);//\nprint(0);//"],
-//   ["non-Latin letters in identifiers", "コンパイラ = 100;"],
-// ]
+  for (const [translation, source, expected] of defineReg) {
+    it(`recognizes ${translation}`, () =>{
+      assert.deepEqual(parse(tokenize(source)), expected);
+      clear();
+    })
+  }
+})
+  
+//test break operator
+const breakExample = [
+  ["*p+ break", "red1, red2, red3, red1, red3", new Program([new Assignment("P0", 0)])],
+  ["*p+- break", "red1, red2, red3, red4, red1, red3", new Program([new Assignment("P0", 0)])],
+  ["*p+-J break", "red1, red2, red3, red4, red5, red1, red3", new Program([new Assignment("P0", 0)])],
+  ["*p+- break break", "red1, red2, red3, red1, red3, red1, red3", new Program([new Assignment("P0", 0)])],
+  ["*p+- break *p", "red1, red2, red3, red1, red3, orange1, orange2", new Program([new Assignment("P0", 0), new Assignment("P1", 0)])],
+]
+
+describe("The parser is able to recognize \"break\" operator", () => {
+  for (const [translation, source, expected] of breakExample) {
+    it(`recognizes ${translation}(*+)`, () =>{
+      assert.deepEqual(parse(tokenize(source)), expected);
+      clear();
+    })
+  }
+})
 
 // const syntaxErrors = [
 //   [
