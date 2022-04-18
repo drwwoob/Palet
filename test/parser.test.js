@@ -114,7 +114,9 @@ describe("The parser is able to print with *?", () => {
 const duaInSingle = [
   ["=","*p+-J *-", "red1, red2, red3, red4, red5, yellow, red1, red4",
     new Program([new Assignment("P0", 0), new Assignment("P0", "P0")])],
-]
+  ["jump to A if !B", "*p+-J *J", "red1, red2, red3, red4, red5, red1, red5",
+  new Program([new Assignment("P0", 0), new Call("gotoIf", ["P0", "P0"])])],
+  ]
 
 describe("The parser is able to execute a two-operator operation that's located in a single register", () => {
   for (const [operand, translation, source, expected] of duaInSingle) {
