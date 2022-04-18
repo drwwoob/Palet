@@ -52,6 +52,19 @@ describe("The parser is able to recognize \"break\" operator", () => {
   }
 })
 
+const addToReg = [
+  ["*p+ *+ *-", "red1, red2, red3, red1, red3, red1, red4", new Program([new Assignment("P0", 0)])],
+]
+
+describe("The parser is able to add color to a register", () => {
+  for (const [translation, source, expected] of addToReg) {
+    it(`added color with the command ${translation}`, () =>{
+      assert.deepEqual(parse(tokenize(source)), expected);
+      clear();
+    })
+  }
+})
+
 // const syntaxErrors = [
 //   [
 //     "non-letter in an identifier",

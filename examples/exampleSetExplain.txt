@@ -34,7 +34,7 @@ red1, red2, red3, red1, red3, orange1, orange2
 
 //add more colors to a register
 (?)
-red1, red2, red3, red1, red3, blue1, blue2
+red1, red2, red3, red1, red3, red1, red4
 *p+ break (add to r1)-
 red1, red2, red3, red1, red3, blue1, blue2
 

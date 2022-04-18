@@ -107,7 +107,7 @@ function parseStatements(tokenStream) {
           let swatchCount = paletteA.swatches;
           if (swatchCount < 5) {
             //define new swatches and go back to top
-            colorA = addToPalette(paletteA, swatchB, tokenStream, swatchCount);
+            colorB = addToPalette(paletteA, swatchB, tokenStream, swatchCount);
           } else {
             statements.push(new Call("print", swatchA.palette));
             //print
