@@ -1,5 +1,6 @@
 export default function* tokenize(program) {
-program = program.replace(/\s/g, "");
+  //get rid of all spaces
+  program = program.replace(/\s/g, "");
   let previousColor = "";
 
   for (let color of program.split(",")) {

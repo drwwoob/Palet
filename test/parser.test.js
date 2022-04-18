@@ -1,6 +1,8 @@
 import assert from "assert/strict"
 import util from "util"
-import ast from "../src/parser.js"
+import parse from "../src/parser.js"
+import tokenize from "../src/lexer.js"
+import { Program, Assignment, BinaryExpression, Call } from "../src/core.js";
 
 describe('The differentiator', () => {
   //detecting empty string, though i think this would not happen
@@ -10,8 +12,24 @@ describe('The differentiator', () => {
   })
 })
 
-//
+// define register
+const defineReg = [
+  ["red1", new Program()],
+  ["red1, red2", new Program()],
+  ["red1, red2, red3", new Program()],
+  ["red1, red2, red3, red4", new Program()],
+  ["red1, red2, red3, red4, red5", new Program()],
+  ["red1, red2, red3, red4, red5, pink", new Program()],
+  ["red1, red2, red3, red4, red5, red1, pink", new Program()],
+  ["red1, red2, red3, red4, red5, orange1, orange2", new Program()],
+]
 
+// the test
+describe("The parser can recognize a list of different colors", () => {
+    for (const [source, expected] of defineReg) {
+        assert.deepEqual(parse(tokenize(source)), expected)
+    }
+})
 // const syntaxChecks = [
 //   ["all numeric literal forms", "print(8 * 89.123);"],
 //   ["complex expressions", "print(83 * ((((((((-13 / 21)))))))) + 1 - -0);"],

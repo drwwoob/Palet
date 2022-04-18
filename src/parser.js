@@ -3,7 +3,7 @@ import { Program, Assignment, BinaryExpression, Call } from "./core.js";
 const operators = ["*", "P", "+", "-", "+"];
 
 const swatches = new Map(); //map swatch to register and oprator
-const palettes = new Map(); //map palette to value and size (register)
+const palettes = new Map(); //map palette to value and size (register) (used to store register)
 
 const statements = [];
 
@@ -12,6 +12,7 @@ export default function parse(tokenStream) {
   return new Program(statements);
 }
 
+//to create a new register
 function addToPalette(id, currentColor, tokenStream, swatchCount) {
   while (
     currentColor != undefined &&
