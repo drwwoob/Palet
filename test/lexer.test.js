@@ -16,7 +16,6 @@ const expectedTokens = [
   "red3",
   "red4",
   "red5",
-  "END",
 ]
 
 describe("The lexer", () => {

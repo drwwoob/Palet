@@ -9,5 +9,4 @@ export default function* tokenize(program) {
       previousColor = color;
     }
   }
-  yield "END";
 }

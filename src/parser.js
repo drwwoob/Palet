@@ -2,21 +2,25 @@ import { Program, Assignment, BinaryExpression, Call } from "./core.js";
 
 const operators = ["*", "P", "+", "-", "+"];
 
+//swatches: a map that stores all colors with its corresponding register and operator
+//storing format: color : {PaletteID, operator}
 const swatches = new Map(); //map swatch to register and oprator
-const palettes = new Map(); //map palette to value and size (register) (used to store register)
+//Palette: a map that stores all registers(which here is called swatch)
+const palettes = new Map(); //map palette to value and size (register)
 
 const statements = [];
 
-export default function parse(tokenStream) {
+export function parse(tokenStream) {
   parseStatements(tokenStream);
   return new Program(statements);
 }
 
 //to create a new register
 function addToPalette(id, currentColor, tokenStream, swatchCount) {
+  console.log(currentColor + swatchCount);
   while (
-    currentColor != undefined &&
-    swatches.get(currentColor) == undefined &&
+    currentColor &&
+    !swatches.get(currentColor) &&
     swatchCount <= 5
   ) {
     swatchCount++;
@@ -39,13 +43,17 @@ function pushAssignment(target, operand1, operator, operand2) {
 
 function parseStatements(tokenStream) {
   let colorA = tokenStream.next().value;
+  console.log("colorA:" + colorA)
 
   while (colorA != undefined) {
     let swatchA = swatches.get(colorA);
+    console.log("colorA defined?")
 
     //if color A is a new color
     if (swatchA == undefined) {
+      console.log("colorA undefined");
       let colorB = tokenStream.next().value;
+      console.log("colorB:" + colorB)
       // if(colorB){
       //   return;
       // }
@@ -63,6 +71,8 @@ function parseStatements(tokenStream) {
 
         palettes.set(newPaletteID, { swatches: 1 });
         statements.push(new Assignment(newPaletteID, 0));
+        console.log("pushed statement:" + statements);
+
 
         //define new swatchess and go back to top
         colorA = addToPalette(newPaletteID, colorB, tokenStream, 1);
@@ -190,4 +200,10 @@ function parseStatements(tokenStream) {
       colorA = colorB;
     }
   }
+}
+
+//for test purpose
+export function clearStatement(){
+  statements = [];
+  console.log("statement:" + statements);
 }

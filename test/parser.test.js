@@ -1,6 +1,6 @@
 import assert from "assert/strict"
 import util from "util"
-import parse from "../src/parser.js"
+import {parse, clearStatement} from "../src/parser.js"
 import tokenize from "../src/lexer.js"
 import { Program, Assignment, BinaryExpression, Call } from "../src/core.js";
 
@@ -15,7 +15,7 @@ describe('The differentiator', () => {
 // define register
 const defineReg = [
   ["single color", "red1", new Program([])],
-  ["*p", "red1, red2", new Program([new Assignment(0, 0)])],
+  ["*p", "red1, red2", new Program([new Assignment("P0", 0)])],
   ["*p+", "red1, red2, red3", new Program()],
   ["*p+-", "red1, red2, red3, red4", new Program()],
   ["*p+-J", "red1, red2, red3, red4, red5", new Program()],
@@ -25,10 +25,11 @@ const defineReg = [
 ]
 
 // the test
-describe("The parser can recognize a list of different colors", () => {
+describe("The parser can recognize a list of different colors and create register", () => {
     for (const [translation, source, expected] of defineReg) {
       it(`recognizes ${translation}`, () =>{
-        assert.deepEqual(parse(tokenize(source)), expected)
+        assert.deepEqual(parse(tokenize(source)), expected);
+        clearStatement();
       })
     }
   })
