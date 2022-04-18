@@ -1,6 +1,6 @@
 import { Program, Assignment, BinaryExpression, Call } from "./core.js";
 
-const operators = ["*", "P", "+", "-", "+"];
+const operators = ["*", "P", "+", "-", "J"];
 
 //swatches: a map that stores all colors with its corresponding register and operator
 //storing format: color : {PaletteID, operator}
@@ -20,7 +20,7 @@ function addToPalette(id, currentColor, tokenStream, swatchCount) {
   while (
     currentColor &&
     !swatches.get(currentColor) &&
-    swatchCount <= 5
+    swatchCount <= 4
   ) {
     swatchCount++;
     palettes.get(id).swatches = swatchCount;
@@ -49,6 +49,10 @@ function parseStatements(tokenStream) {
     //if color A is a new color
     if (swatchA == undefined) {
       let colorB = tokenStream.next().value;
+      if(!colorB){
+        colorA = colorB;
+        break;
+      }
       // if(colorB){
       //   return;
       // }
@@ -73,6 +77,7 @@ function parseStatements(tokenStream) {
       } else {
         //swatchB is defined
         //back to top without consuming colorB
+        console.log("did not meet");
         colorA = colorB;
       }
     } else if (swatchA.operator != "*") {
@@ -83,14 +88,14 @@ function parseStatements(tokenStream) {
           statements.push(new Call("print", operand));
           break;
         case "+": //++
-          console.log("it should be at J");
+          console.log("it should be at " + swatchA.operator);
           pushAssignment(operand, operand, "+", 1);
           break;
         case "-": //--
           pushAssignment(operand, operand, "-", 1);
           break;
         case "j": //jmp
-        console.log("it is at J");
+        console.log("it is at " + swatchA.operator);
           statements.push(new Call("goto", operand));
           break;
       }

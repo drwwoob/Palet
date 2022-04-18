@@ -4,7 +4,7 @@ import {parse, clearStatement, clear} from "../src/parser.js"
 import tokenize from "../src/lexer.js"
 import { Program, Assignment, BinaryExpression, Call } from "../src/core.js";
 
-describe('The differentiator', () => {
+describe('Empty String', () => {
   //detecting empty string, though i think this would not happen
   it('detects empty string', () => {
     assert.throws(() => parse([]))
@@ -19,7 +19,7 @@ const defineReg = [
   ["*p+", "red1, red2, red3", new Program([new Assignment("P0", 0)])],
   ["*p+-", "red1, red2, red3, red4", new Program([new Assignment("P0", 0)])],
   ["*p+-J", "red1, red2, red3, red4, red5", new Program([new Assignment("P0", 0)])],
-  ["*p+-J", "red1, red2, red3, red4, red5, pink", new Program([new Assignment("P0", 0)])],
+  ["*p+-J blank", "red1, red2, red3, red4, red5, pink", new Program([new Assignment("P0", 0)])],
   //["*p+-J*", "red1, red2, red3, red4, red5, red1, pink", new Program([new Assignment("P0", 0)])],
   ["*p+-J *p", "red1, red2, red3, red4, red5, orange1, orange2", new Program([new Assignment("P0", 0), new Assignment("P1", 0)])],
 ]
@@ -43,9 +43,9 @@ const breakExample = [
   ["*p+- break *p", "red1, red2, red3, red1, red3, orange1, orange2", new Program([new Assignment("P0", 0), new Assignment("P1", 0)])],
 ]
 
-describe("The parser is able to recognize \"break\" operator", () => {
+describe("The parser is able to recognize \"break\"(*+) operator", () => {
   for (const [translation, source, expected] of breakExample) {
-    it(`recognizes ${translation}(*+)`, () =>{
+    it(`recognizes ${translation}`, () =>{
       assert.deepEqual(parse(tokenize(source)), expected);
       clear();
     })
@@ -75,11 +75,10 @@ const singleOp = [
 describe("The parser is able to execute a single binary operator", () => {
   for (const [operand, translation, source, expected] of singleOp) {
     it(`test operand \"${operand}\" using the command ${translation}`, () =>{
-      clear();
       assert.deepEqual(parse(tokenize(source)), expected);
+      clear();
     })
   }
-  clear();
 })
 
 const singleCall = [
@@ -97,6 +96,11 @@ describe("The parser is able to execute a single call", () => {
     })
   }
 })
+
+
+
+
+
 // const syntaxErrors = [
 //   [
 //     "non-letter in an identifier",
