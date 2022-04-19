@@ -120,7 +120,35 @@ const duaInSingle = [
 
 describe("The parser is able to execute a two-operator operation that's located in a single register", () => {
   for (const [operand, translation, source, expected] of duaInSingle) {
-    it(`test operand \"${operand}\" using the command ${translation}`, () =>{
+    it(`test \"${operand}\" using the command ${translation}`, () =>{
+      assert.deepEqual(parse(tokenize(source)), expected);
+      clear();
+    })
+  }
+})
+
+const triInSingle = [
+  ["r1 = r1 + r1", "*p+-J* + *p+", "red1, red2, red3, red4, red5, red3, red1, red2, red3",
+    new Program([new Assignment("P0", 0), 
+    new Assignment("P0", new BinaryExpression("+", "P0", 1)),
+    new Assignment("P0", new BinaryExpression("+", "P0", "P0"))])],
+    ["r1 = r1 - r1", "*p+-J* + *p-", "red1, red2, red3, red4, red5, red3, red1, red2, red4",
+    new Program([new Assignment("P0", 0), 
+    new Assignment("P0", new BinaryExpression("+", "P0", 1)),
+    new Assignment("P0", new BinaryExpression("-", "P0", "P0"))])],
+    ["r1 = r1 * r1", "*p+-J* + *p*", "red1, red2, red3, red4, red5, red3, red1, red2, red1",
+    new Program([new Assignment("P0", 0), 
+    new Assignment("P0", new BinaryExpression("+", "P0", 1)),
+    new Assignment("P0", new BinaryExpression("*", "P0", "P0"))])],
+    ["r1 = r1 / r1", "*p+-J* + *pJ", "red1, red2, red3, red4, red5, red3, red1, red2, red5",
+    new Program([new Assignment("P0", 0), 
+    new Assignment("P0", new BinaryExpression("+", "P0", 1)),
+    new Assignment("P0", new BinaryExpression("/", "P0", "P0"))])],
+]
+
+describe("The parser is able to execute a three-operator operation that's located in a single register", () => {
+  for (const [operand, translation, source, expected] of triInSingle) {
+    it(`test \"${operand}\" using the command ${translation}`, () =>{
       assert.deepEqual(parse(tokenize(source)), expected);
       clear();
     })

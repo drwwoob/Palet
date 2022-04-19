@@ -81,7 +81,6 @@ function parseStatements(tokenStream) {
       let operand = swatchA.palette;
       switch (swatchA.operator) {
         case "P": //print
-          console.log("is at print");
           statements.push(new Call("print", operand));
           break;
         case "+": //++
@@ -110,7 +109,7 @@ function parseStatements(tokenStream) {
           if (swatchCount < 5) {
             console.log("did it added");
             //define new swatches and go back to top
-            colorB = addToPalette(paletteA, swatchB, tokenStream, swatchCount);
+            colorB = addToPalette(operandA, swatchB, tokenStream, swatchCount);
           } else {
             statements.push(new Call("print", swatchA.palette));
             //print
@@ -144,20 +143,20 @@ function parseStatements(tokenStream) {
                 let operandC = swatchC.palette;
                 switch (swatchC.operator) {
                   case "+": //+
-                    pushAssignment(paletteA, operandB, "+", operandC);
+                    pushAssignment(operandA, operandB, "+", operandC);
                     break;
                   case "-": //-
-                    pushAssignment(paletteA, operandB, "-", operandC);
+                    pushAssignment(operandA, operandB, "-", operandC);
                     break;
                   case "*": //*
-                    pushAssignment(paletteA, operandB, "*", operandC);
+                    pushAssignment(operandA, operandB, "*", operandC);
                     break;
                   case "j": // /
-                    pushAssignment(paletteA, operandB, "/", operandC);
+                    pushAssignment(operandA, operandB, "/", operandC);
                     break;
                 }
                 //back to top
-                colorA = tokenStream.next().value;
+                colorB = tokenStream.next().value;
               } else {
                 //current swatchC is undefined
                 //look at next swatch and make it new swatchC
