@@ -1,6 +1,6 @@
 import assert from "assert/strict"
 import util from "util"
-import {parse, clearStatement, clear} from "../src/parser.js"
+import {parse, /*clearStatement,*/ clear} from "../src/parser.js"
 import tokenize from "../src/lexer.js"
 import { Program, Assignment, BinaryExpression, Call } from "../src/core.js";
 
@@ -15,13 +15,18 @@ describe('Empty String', () => {
 // define register
 const defineReg = [
   //["single color", "red1", new Program([])],
-  ["*p", "red1, red2", new Program([new Assignment("P0", 0)])],
-  ["*p+", "red1, red2, red3", new Program([new Assignment("P0", 0)])],
-  ["*p+-", "red1, red2, red3, red4", new Program([new Assignment("P0", 0)])],
-  ["*p+-J", "red1, red2, red3, red4, red5", new Program([new Assignment("P0", 0)])],
-  ["*p+-J ?", "red1, red2, red3, red4, red5, pink", new Program([new Assignment("P0", 0)])],
-  //["*p+-J*", "red1, red2, red3, red4, red5, red1, pink", new Program([new Assignment("P0", 0)])],
-  ["*p+-J *p", "red1, red2, red3, red4, red5, orange1, orange2", new Program([new Assignment("P0", 0), new Assignment("P1", 0)])],
+  ["*p", "red1, red2", 
+    new Program([new Assignment("P0", 0)])],
+  ["*p+", "red1, red2, red3", 
+    new Program([new Assignment("P0", 0)])],
+  ["*p+-", "red1, red2, red3, red4", 
+    new Program([new Assignment("P0", 0)])],
+  ["*p+-J", "red1, red2, red3, red4, red5", 
+    new Program([new Assignment("P0", 0)])],
+  ["*p+-J ?", "red1, red2, red3, red4, red5, pink", 
+    new Program([new Assignment("P0", 0)])],
+  ["*p+-J *p", "red1, red2, red3, red4, red5, orange1, orange2", 
+    new Program([new Assignment("P0", 0), new Assignment("P1", 0)])],
 ]
 
 
@@ -36,11 +41,16 @@ describe("The parser can recognize a list of different colors and create registe
   
 //test break operator
 const breakExample = [
-  ["*p+ break", "red1, red2, red3, red1, red3", new Program([new Assignment("P0", 0)])],
-  ["*p+- break", "red1, red2, red3, red4, red1, red3", new Program([new Assignment("P0", 0)])],
-  ["*p+-J break", "red1, red2, red3, red4, red5, red1, red3", new Program([new Assignment("P0", 0)])],
-  ["*p+- break break", "red1, red2, red3, red1, red3, red1, red3", new Program([new Assignment("P0", 0)])],
-  ["*p+- break *p", "red1, red2, red3, red1, red3, orange1, orange2", new Program([new Assignment("P0", 0), new Assignment("P1", 0)])],
+  ["*p+ break", "red1, red2, red3, red1, red3", 
+    new Program([new Assignment("P0", 0)])],
+  ["*p+- break", "red1, red2, red3, red4, red1, red3", 
+    new Program([new Assignment("P0", 0)])],
+  ["*p+-J break", "red1, red2, red3, red4, red5, red1, red3", 
+    new Program([new Assignment("P0", 0)])],
+  ["*p+- break break", "red1, red2, red3, red1, red3, red1, red3", 
+    new Program([new Assignment("P0", 0)])],
+  ["*p+- break *p", "red1, red2, red3, red1, red3, orange1, orange2", 
+    new Program([new Assignment("P0", 0), new Assignment("P1", 0)])],
 ]
 
 describe("The parser is able to recognize \"break\"(*+) operator", () => {
@@ -115,7 +125,7 @@ const duaInSingle = [
   ["=","*p+-J *-", "red1, red2, red3, red4, red5, yellow, red1, red4",
     new Program([new Assignment("P0", 0), new Assignment("P0", "P0")])],
   ["jump to A if !B", "*p+-J *J", "red1, red2, red3, red4, red5, red1, red5",
-  new Program([new Assignment("P0", 0), new Call("gotoIf", ["P0", "P0"])])],
+    new Program([new Assignment("P0", 0), new Call("gotoIf", ["P0", "P0"])])],
   ]
 
 describe("The parser is able to execute a two-operator operation that's located in a single register", () => {
@@ -128,26 +138,51 @@ describe("The parser is able to execute a two-operator operation that's located 
 })
 
 const triInSingle = [
-  ["r1 = r1 + r1", "*p+-J* + *p+", "red1, red2, red3, red4, red5, red3, red1, red2, red3",
+  ["r1 = r1 + r1", "*p+-J + *p+", "red1, red2, red3, red4, red5, red3, red1, red2, red3",
     new Program([new Assignment("P0", 0), 
-    new Assignment("P0", new BinaryExpression("+", "P0", 1)),
-    new Assignment("P0", new BinaryExpression("+", "P0", "P0"))])],
-    ["r1 = r1 - r1", "*p+-J* + *p-", "red1, red2, red3, red4, red5, red3, red1, red2, red4",
+      new Assignment("P0", new BinaryExpression("+", "P0", 1)),
+      new Assignment("P0", new BinaryExpression("+", "P0", "P0"))])],
+    ["r1 = r1 - r1", "*p+-J + *p-", "red1, red2, red3, red4, red5, red3, red1, red2, red4",
     new Program([new Assignment("P0", 0), 
-    new Assignment("P0", new BinaryExpression("+", "P0", 1)),
-    new Assignment("P0", new BinaryExpression("-", "P0", "P0"))])],
-    ["r1 = r1 * r1", "*p+-J* + *p*", "red1, red2, red3, red4, red5, red3, red1, red2, red1",
+      new Assignment("P0", new BinaryExpression("+", "P0", 1)),
+      new Assignment("P0", new BinaryExpression("-", "P0", "P0"))])],
+    ["r1 = r1 * r1", "*p+-J + *p*", "red1, red2, red3, red4, red5, red3, red1, red2, red1",
     new Program([new Assignment("P0", 0), 
-    new Assignment("P0", new BinaryExpression("+", "P0", 1)),
-    new Assignment("P0", new BinaryExpression("*", "P0", "P0"))])],
-    ["r1 = r1 / r1", "*p+-J* + *pJ", "red1, red2, red3, red4, red5, red3, red1, red2, red5",
+      new Assignment("P0", new BinaryExpression("+", "P0", 1)),
+      new Assignment("P0", new BinaryExpression("*", "P0", "P0"))])],
+    ["r1 = r1 / r1", "*p+-J + *pJ", "red1, red2, red3, red4, red5, red3, red1, red2, red5",
     new Program([new Assignment("P0", 0), 
-    new Assignment("P0", new BinaryExpression("+", "P0", 1)),
-    new Assignment("P0", new BinaryExpression("/", "P0", "P0"))])],
+      new Assignment("P0", new BinaryExpression("+", "P0", 1)),
+      new Assignment("P0", new BinaryExpression("/", "P0", "P0"))])],
 ]
 
 describe("The parser is able to execute a three-operator operation that's located in a single register", () => {
   for (const [operand, translation, source, expected] of triInSingle) {
+    it(`test \"${operand}\" using the command ${translation}`, () =>{
+      assert.deepEqual(parse(tokenize(source)), expected);
+      clear();
+    })
+  }
+})
+
+const quaInSingle = [
+  ["r1 = r1 ^ r1", "*p+-J + *p?*", "red1, red2, red3, red4, red5, red3, red1, red2, pink, red1",
+    new Program([new Assignment("P0", 0),
+      new Assignment("P0", new BinaryExpression("+", "P0", 1)),
+      new Assignment("P0", new BinaryExpression("^", "P0", "P0"))])],
+  ["r1 = r1 % r1", "*p+-J + *p?J", "red1, red2, red3, red4, red5, red3, red1, red2, pink, red5",
+    new Program([new Assignment("P0", 0),
+      new Assignment("P0", new BinaryExpression("+", "P0", 1)),
+      new Assignment("P0", new BinaryExpression("%", "P0", "P0"))])],
+  ["undefined", "*p+-J *p?+", "red1, red2, red3, red4, red5, red1, red2, pink, red3",
+    new Program([new Assignment("P0", 0)])],
+  ["undefined", "*p+-J *p?-", "red1, red2, red3, red4, red5, red1, red2, pink, red4",
+    new Program([new Assignment("P0", 0)])],
+
+]
+
+describe("The parser is able to execute a four-operator operation that's located in a single register", () => {
+  for (const [operand, translation, source, expected] of quaInSingle) {
     it(`test \"${operand}\" using the command ${translation}`, () =>{
       assert.deepEqual(parse(tokenize(source)), expected);
       clear();

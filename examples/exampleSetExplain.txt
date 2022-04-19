@@ -62,19 +62,25 @@ red1, red2, red3, red4, red5, red1, red5
 
 //test three operands in a single register conbined
 red1, red2, red3, red4, red5, red3, red1, red2, red3
-*p+-J* r1++ *p+
+*p+-J r1++ *p+
 *p+-J r1 = r1 + r1
 red1, red2, red3, red4, red5, red3, red1, red2, red4
-*p+-J* r1++ *p-
+*p+-J r1++ *p-
 *p+-J r1 = r1 - r1
 red1, red2, red3, red4, red5, red3, red1, red2, red1
-*p+-J* r1++ *p*
+*p+-J r1++ *p*
 *p+-J r1 = r1 * r1
 red1, red2, red3, red4, red5, red3, red1, red2, red5
-*p+-J* r1++ *pJ
+*p+-J r1++ *pJ
 *p+-J r1 = r1 / r1
 
 //test four operands in a single register conbined
+red1, red2, red3, red4, red5, red3, red1, red2, pink, red1
+*p+-J + *p?*
+r1 = r1 ^ r1
+red1, red2, red3, red4, red5, red3, red1, red2, pink, red5
+*p+-J + *p?J
+r1 = r1 % r1
 
 //special case within this
 red1, red2, red3, red4 ,red5, red1, yellow, red1, red2, green1, green2

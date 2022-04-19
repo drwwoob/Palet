@@ -167,10 +167,10 @@ function parseStatements(tokenStream) {
                   let operandC = swatchC.palette;
                   switch (swatchC.operator) {
                     case "*": //**
-                      pushAssignment(paletteA, operandB, "^", operandC);
+                      pushAssignment(operandA, operandB, "^", operandC);
                       break;
                     case "j": //%
-                      pushAssignment(paletteA, operandB, "%", operandC);
+                      pushAssignment(operandA, operandB, "%", operandC);
                       break;
                     case "+": //nothing yet
                       break;
@@ -178,16 +178,14 @@ function parseStatements(tokenStream) {
                       break;
                   }
                   //back to top
-                  colorA = tokenStream.next().value;
+                  colorB = tokenStream.next().value;
                 }
-                //back to top without consuming colorC
-                colorA = colorC;
               }
             }
             //*P followed by nothing
             //back to top without consuming colorC
             //will exit loop
-            colorA = colorC;
+            //colorA = colorC;
           }
         }
       }
@@ -199,9 +197,9 @@ function parseStatements(tokenStream) {
   }
 }
 
-export function clearStatement(){
-  statements.length = 0;
-}
+// export function clearStatement(){
+//   statements.length = 0;
+// }
 
 //for test purpose
 export function clear(){
