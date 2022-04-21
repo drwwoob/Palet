@@ -1,6 +1,6 @@
 import assert from "assert/strict"
 import util from "util"
-import {parse, /*clearStatement,*/ clear} from "../src/parser.js"
+import parse, { /*clearStatement,*/ clear} from "../src/parser.js"
 import tokenize from "../src/lexer.js"
 import { Program, Assignment, BinaryExpression, Call } from "../src/core.js";
 
@@ -41,15 +41,15 @@ describe("The parser can recognize a list of different colors and create registe
   
 //test break operator
 const breakExample = [
-  ["*p+ break", "red1, red2, red3, red1, red3", 
+  ["*p+ *+", "red1, red2, red3, red1, red3", 
     new Program([new Assignment("P0", 0)])],
-  ["*p+- break", "red1, red2, red3, red4, red1, red3", 
+  ["*p+- *+", "red1, red2, red3, red4, red1, red3", 
     new Program([new Assignment("P0", 0)])],
-  ["*p+-J break", "red1, red2, red3, red4, red5, red1, red3", 
+  ["*p+-J *+", "red1, red2, red3, red4, red5, red1, red3", 
     new Program([new Assignment("P0", 0)])],
-  ["*p+- break break", "red1, red2, red3, red1, red3, red1, red3", 
+  ["*p+- *+ *+", "red1, red2, red3, red1, red3, red1, red3", 
     new Program([new Assignment("P0", 0)])],
-  ["*p+- break *p", "red1, red2, red3, red1, red3, orange1, orange2", 
+  ["*p+- *+ *p", "red1, red2, red3, red1, red3, orange1, orange2", 
     new Program([new Assignment("P0", 0), new Assignment("P1", 0)])],
 ]
 

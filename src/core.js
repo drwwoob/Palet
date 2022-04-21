@@ -23,11 +23,11 @@ export class BinaryExpression {
   }
 }
 
-export class UnaryExpression {
-  constructor(op, operand) {
-    Object.assign(this, { op, operand });
-  }
-}
+// export class UnaryExpression {
+//   constructor(op, operand) {
+//     Object.assign(this, { op, operand });
+//   }
+// }
 
 export class Call {
   constructor(callee, args) {

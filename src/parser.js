@@ -10,7 +10,7 @@ const palettes = new Map(); //map palette to value and size (register)
 
 let statements = [];
 
-export function parse(tokenStream) {
+export default function parse(tokenStream) {
   parseStatements(tokenStream);
   return new Program(statements);
 }
