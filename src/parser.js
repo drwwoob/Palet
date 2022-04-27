@@ -8,7 +8,10 @@ const swatches = new Map(); //map swatch to register and oprator
 //Palette: a map that stores all registers(which here is called swatch)
 const palettes = new Map(); //map palette to value and size (register)
 
+//format: [[new Assignment(), position], [new Call(), position]]
 let statements = [];
+
+let position = 0;
 
 export default function parse(tokenStream) {
   parseStatements(tokenStream);
@@ -29,6 +32,7 @@ function addToPalette(id, currentColor, tokenStream, swatchCount) {
       operator: operators[swatchCount - 1],
     });
     currentColor = tokenStream.next().value;
+    position++;
   }
 
   return currentColor;
@@ -36,7 +40,7 @@ function addToPalette(id, currentColor, tokenStream, swatchCount) {
 
 function pushAssignment(target, operand1, operator, operand2) {
   statements.push(
-    new Assignment(target, new BinaryExpression(operator, operand1, operand2))
+    [new Assignment(target, new BinaryExpression(operator, operand1, operand2)), position]
   );
 }
 
@@ -66,7 +70,8 @@ function parseStatements(tokenStream) {
         });
 
         palettes.set(newPaletteID, { swatches: 1 });
-        statements.push(new Assignment(newPaletteID, 0));
+        statements.push([new Assignment(newPaletteID, 0), position]);
+        position += 2;
 
 
         //define new swatchess and go back to top
@@ -81,16 +86,20 @@ function parseStatements(tokenStream) {
       let operand = swatchA.palette;
       switch (swatchA.operator) {
         case "P": //print
-          statements.push(new Call("print", operand));
+          statements.push([new Call("print", operand), position]);
+          position += 2;
           break;
         case "+": //++
          pushAssignment(operand, operand, "+", 1);
+         position += 2;
           break;
         case "-": //--
           pushAssignment(operand, operand, "-", 1);
+          position += 2;
           break;
         case "j": //jmp
-          statements.push(new Call("goto", operand));
+          statements.push([new Call("goto", operand), position]);
+          position += 2;
           break;
       }
       //back to top
@@ -111,7 +120,8 @@ function parseStatements(tokenStream) {
             //define new swatches and go back to top
             colorB = addToPalette(operandA, swatchB, tokenStream, swatchCount);
           } else {
-            statements.push(new Call("print", swatchA.palette));
+            statements.push([new Call("print", swatchA.palette), position]);
+            position += 2;
             //print
             //back to top without consuming colorB
             colorA = colorB;
@@ -122,12 +132,15 @@ function parseStatements(tokenStream) {
           if (swatchB.operator != "P") {
             switch (swatchB.operator) {
               case "+": //escape
+              position += 2;
                 break;
               case "-": //=
-                statements.push(new Assignment(operandA, operandB));
+                statements.push([new Assignment(operandA, operandB), 1]);
+                position += 2;
                 break;
               case "j": //if jmp
-                statements.push(new Call("gotoIf", [operandA, operandB]));
+                statements.push([new Call("gotoIf", [operandA, operandB]), 1]);
+                position += 2;
                 break;
             }
             // back to top
@@ -144,15 +157,19 @@ function parseStatements(tokenStream) {
                 switch (swatchC.operator) {
                   case "+": //+
                     pushAssignment(operandA, operandB, "+", operandC);
+                    position += 3;
                     break;
                   case "-": //-
                     pushAssignment(operandA, operandB, "-", operandC);
+                    position += 3;
                     break;
                   case "*": //*
                     pushAssignment(operandA, operandB, "*", operandC);
+                    position += 3;
                     break;
                   case "j": // /
                     pushAssignment(operandA, operandB, "/", operandC);
+                    position += 3;
                     break;
                 }
                 //back to top
@@ -168,13 +185,17 @@ function parseStatements(tokenStream) {
                   switch (swatchC.operator) {
                     case "*": //**
                       pushAssignment(operandA, operandB, "^", operandC);
+                      position += 4;
                       break;
                     case "j": //%
                       pushAssignment(operandA, operandB, "%", operandC);
+                      position += 4;
                       break;
                     case "+": //nothing yet
+                      position += 4;
                       break;
                     case "-": //nothing yet
+                      position += 4;
                       break;
                   }
                   //back to top

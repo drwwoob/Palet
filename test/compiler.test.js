@@ -10,7 +10,7 @@ const exampleCheck = [
     `red1, red2, red3, red4, red5, red3, pink, 
         red3, red1, red2, red1, pink,
         red1, red2, red1, pink, red1, red2, red3, pink,
-        red3, red2`],
+        red3, red2"`],
 ]
 
 describe("able to compute with unary operator", () => {

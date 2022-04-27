@@ -27,19 +27,16 @@ export default function compile(source) {
       }
     }
     else{
-      //if register is not stored in valueMap
+      //if it is an Assignment, change the value stored in valueMap
       valueMap.set(statement.target,
-        typeof statement.source !== 'number'?
+        //if source is a number, store it directly
+        typeof statement.source === 'number'?
+        statement.source :
+        //else if one of the computing value is a number, go to unary
           (typeof statement.source.right === 'number'?
-            computeUnary(statement.source) : computeBinary(statement.source))
-            : statement.source);
+          //else if they are both registers, go to binary
+            computeUnary(statement.source) : computeBinary(statement.source)));
     }
-    // else if(typeof statement == BinaryExpression){
-
-    // }
-    // else if(){
-
-    // }
   }
   return resultString.join();
 }
