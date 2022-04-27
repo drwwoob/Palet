@@ -34,7 +34,7 @@ function addToPalette(id, currentColor, tokenStream, swatchCount) {
     currentColor = tokenStream.next().value;
     position++;
   }
-
+  position--;
   return currentColor;
 }
 
@@ -227,4 +227,5 @@ export function clear(){
   statements = [];
   swatches.clear();
   palettes.clear();
+  position = 0;
 }

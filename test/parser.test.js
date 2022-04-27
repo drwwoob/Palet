@@ -17,16 +17,16 @@ const defineReg = [
   //["single color", "red1", new Program([])],
   ["*p", "red1, red2", 
     new Program([[new Assignment("P0", 0), 0]])],
-  // ["*p+", "red1, red2, red3", 
-  // new Program([[new Assignment("P0", 0), 0]])],
-  // ["*p+-", "red1, red2, red3, red4", 
-  // new Program([[new Assignment("P0", 0), 0]])],
-  // ["*p+-J", "red1, red2, red3, red4, red5", 
-  // new Program([[new Assignment("P0", 0), 0]])],
-  // ["*p+-J ?", "red1, red2, red3, red4, red5, pink", 
-  // new Program([[new Assignment("P0", 0), 0]])],
-  // ["*p+-J *p", "red1, red2, red3, red4, red5, orange1, orange2", 
-  //   new Program([[new Assignment("P0", 0), 0], [new Assignment("P1", 0)], 5])],
+  ["*p+", "red1, red2, red3", 
+  new Program([[new Assignment("P0", 0), 0]])],
+  ["*p+-", "red1, red2, red3, red4", 
+  new Program([[new Assignment("P0", 0), 0]])],
+  ["*p+-J", "red1, red2, red3, red4, red5", 
+  new Program([[new Assignment("P0", 0), 0]])],
+  ["*p+-J ?", "red1, red2, red3, red4, red5, pink", 
+  new Program([[new Assignment("P0", 0), 0]])],
+  ["*p+-J *p", "red1, red2, red3, red4, red5, orange1, orange2", 
+    new Program([[new Assignment("P0", 0), 0], [new Assignment("P1", 0), 5]])],
 ]
 
 
@@ -40,40 +40,40 @@ describe("The parser can recognize a list of different colors and create registe
 })
   
 //test break operator
-// const breakExample = [
-//   ["*p+ *+", "red1, red2, red3, red1, red3", 
-//     new Program([new Assignment("P0", 0)])],
-//   ["*p+- *+", "red1, red2, red3, red4, red1, red3", 
-//     new Program([new Assignment("P0", 0)])],
-//   ["*p+-J *+", "red1, red2, red3, red4, red5, red1, red3", 
-//     new Program([new Assignment("P0", 0)])],
-//   ["*p+- *+ *+", "red1, red2, red3, red1, red3, red1, red3", 
-//     new Program([new Assignment("P0", 0)])],
-//   ["*p+- *+ *p", "red1, red2, red3, red1, red3, orange1, orange2", 
-//     new Program([new Assignment("P0", 0), new Assignment("P1", 0)])],
-// ]
+const breakExample = [
+  ["*p+ *+", "red1, red2, red3, red1, red3", 
+  new Program([[new Assignment("P0", 0), 0]])],
+  ["*p+- *+", "red1, red2, red3, red4, red1, red3", 
+  new Program([[new Assignment("P0", 0), 0]])],
+  ["*p+-J *+", "red1, red2, red3, red4, red5, red1, red3", 
+  new Program([[new Assignment("P0", 0), 0]])],
+  ["*p+- *+ *+", "red1, red2, red3, red1, red3, red1, red3", 
+  new Program([[new Assignment("P0", 0), 0]])],
+  ["*p+- *+ *p", "red1, red2, red3, red1, red3, orange1, orange2", 
+  new Program([[new Assignment("P0", 0), 0], [new Assignment("P1", 0), 5]])],
+]
 
-// describe("The parser is able to recognize \"break\"(*+) operator", () => {
-//   for (const [translation, source, expected] of breakExample) {
-//     it(`recognizes ${translation}`, () =>{
-//       assert.deepEqual(parse(tokenize(source)), expected);
-//       clear();
-//     })
-//   }
-// })
+describe("The parser is able to recognize \"break\"(*+) operator", () => {
+  for (const [translation, source, expected] of breakExample) {
+    it(`recognizes ${translation}`, () =>{
+      assert.deepEqual(parse(tokenize(source)), expected);
+      clear();
+    })
+  }
+})
 
-// const addToReg = [
-//   ["*p+ *+ *-", "red1, red2, red3, red1, red3, red1, red4", new Program([new Assignment("P0", 0)])],
-// ]
+const addToReg = [
+  ["*p+ *+ *-", "red1, red2, red3, red1, red3, red1, red4", new Program([new Assignment("P0", 0)])],
+]
 
-// describe("The parser is able to add color to a register", () => {
-//   for (const [translation, source, expected] of addToReg) {
-//     it(`added color with the command ${translation}`, () =>{
-//       assert.deepEqual(parse(tokenize(source)), expected);
-//       clear();
-//     })
-//   }
-// })
+describe("The parser is able to add color to a register", () => {
+  for (const [translation, source, expected] of addToReg) {
+    it(`added color with the command ${translation}`, () =>{
+      assert.deepEqual(parse(tokenize(source)), expected);
+      clear();
+    })
+  }
+})
 
 // const singleOp = [
 //   ["+", "*p+-J +", "red1, red2, red3, red4, red5, red3",

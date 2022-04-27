@@ -13,12 +13,12 @@ const exampleCheck = [
         red3, red2"`],
 ]
 
-describe("able to compute with unary operator", () => {
-    for (const [operator, expected, asciiNum, source] of exampleCheck) {
-      it(`execute operator ${operator} that should get the result number ${asciiNum}`, () =>{
-        assert.deepEqual(compile(source), expected);
-        clearCompiler();
-        clear();
-      })
-    }
-  })
+// describe("able to compute with unary operator", () => {
+//     for (const [operator, expected, asciiNum, source] of exampleCheck) {
+//       it(`execute operator ${operator} that should get the result number ${asciiNum}`, () =>{
+//         assert.deepEqual(compile(source), expected);
+//         clearCompiler();
+//         clear();
+//       })
+//     }
+//   })
