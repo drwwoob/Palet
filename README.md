@@ -34,4 +34,4 @@ The specific aliases used in a program, along with their order and number, chang
 ## Examples:
 
 ![IMG_4B990C7F236E-1](https://user-images.githubusercontent.com/20586059/154793315-b331e75d-a37d-4bfe-ab20-5f9313b19a47.jpg)
-![IMG_4B990C7F236E-1](https://user-images.githubusercontent.com/20586059/154793317-bbaf30ac-20b9-4c3f-abb0-eecf55f82884.jpg)
+![HELLO](https://user-images.githubusercontent.com/46990486/165595272-99ac9ec3-8616-4169-82a0-1e12d385b88e.jpg)
