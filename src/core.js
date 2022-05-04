@@ -17,6 +17,12 @@ export class Assignment {
   }
 }
 
+export class Increment {
+  constructor(target) {
+    Object.assign(this, { target });
+  }
+}
+
 export class BinaryExpression {
   constructor(op, left, right) {
     Object.assign(this, { op, left, right });
