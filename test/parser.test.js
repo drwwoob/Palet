@@ -189,3 +189,34 @@ describe("The parser is able to execute a four-operator operation that's located
     })
   }
 })
+
+const examp = [
+  ["+, *, +", "!", 33, 
+  // *p+-J +(1) ? +(2) *p*(4) ? *p*(16) ? *p+(32) ? +(33) p(print)
+  `red1, red2, red3, red4, red5,
+      red3, pink, 
+      red3, 
+      red1, red2, red1, pink,
+      red1, red2, red1, pink,
+      red1, red2, red3, pink,
+      red3,
+      red2`,
+  new Program([[new Assignment("P0", 0), 0],
+    [new Assignment("P0", new BinaryExpression("+", "P0", 1)), 5],
+    [new Assignment("P0", new BinaryExpression("+", "P0", 1)), 7],
+    [new Assignment("P0", new BinaryExpression("*", "P0", "P0")), 8],
+    [new Assignment("P0", new BinaryExpression("*", "P0", "P0")), 12],
+    [new Assignment("P0", new BinaryExpression("+", "P0", "P0")), 16],
+    [new Assignment("P0", new BinaryExpression("+", "P0", 1)), 20],
+    [new Call("print", "P0"), 21]
+  ])],
+]
+
+describe("example", () => {
+  for (const [operand, translation, ascii, source, expected] of examp) {
+    it(`test \"${operand}\" using the command ${translation}`, () =>{
+      assert.deepEqual(parse(tokenize(source)), expected);
+      clear();
+    })
+  }
+})
