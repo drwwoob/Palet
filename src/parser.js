@@ -53,8 +53,10 @@ function parseStatements(tokenStream) {
     //if color A is a new color
     if (swatchA == undefined) {
       let colorB = tokenStream.next().value;
+      //if there is no more color
       if(!colorB){
         colorA = colorB;
+        position++;
         break;
       }
       let swatchB = swatches.get(colorB);
@@ -80,6 +82,7 @@ function parseStatements(tokenStream) {
         //swatchB is defined
         //back to top without consuming colorB
         colorA = colorB;
+        position++;
       }
     } else if (swatchA.operator != "*") {
       //single operator
@@ -87,19 +90,19 @@ function parseStatements(tokenStream) {
       switch (swatchA.operator) {
         case "P": //print
           statements.push([new Call("print", operand), position]);
-          position += 2;
+          position ++;
           break;
         case "+": //++
          pushAssignment(operand, operand, "+", 1);
-         position += 2;
+         position ++;
           break;
         case "-": //--
           pushAssignment(operand, operand, "-", 1);
-          position += 2;
+          position ++;
           break;
         case "j": //jmp
           statements.push([new Call("goto", operand), position]);
-          position += 2;
+          position ++;
           break;
       }
       //back to top
@@ -116,7 +119,6 @@ function parseStatements(tokenStream) {
         if (swatchB == undefined) {
           let swatchCount = paletteA.swatches;
           if (swatchCount < 5) {
-            console.log("did it added");
             //define new swatches and go back to top
             colorB = addToPalette(operandA, swatchB, tokenStream, swatchCount);
           } else {
@@ -135,11 +137,11 @@ function parseStatements(tokenStream) {
               position += 2;
                 break;
               case "-": //=
-                statements.push([new Assignment(operandA, operandB), 1]);
+                statements.push([new Assignment(operandA, operandB), position]);
                 position += 2;
                 break;
               case "j": //if jmp
-                statements.push([new Call("gotoIf", [operandA, operandB]), 1]);
+                statements.push([new Call("gotoIf", [operandA, operandB]), position]);
                 position += 2;
                 break;
             }
