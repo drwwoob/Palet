@@ -15,7 +15,7 @@ export default function generate(program) {
     if(statement.constructor.name === "Call"){
       switch(statement.callee){
         case "print":
-          output.push("console.log(" + String.fromCharCode(valueMap.get(statement.args)) + ");");
+          output.push("console.log((char)" + statement.args + ")");
           break;
         case "gotoIf":
           break;
@@ -28,23 +28,13 @@ export default function generate(program) {
     else{
         //if it is an Assignment
         //check if it is a new variable
-        console.log(statement.target);
-        console.log(!seen.find((a) => a === statement.target));
         if(!seen.find((a) => a === statement.target)){
             output.push("let " + statement.target + " = 0");
-            console.log("let " + statement.target + " = 0");
             seen.push(statement.target);
         }
-        //if not a new variable
+        // if it is a operation on the right
         else{
-            // if it is a number on the right
-            if(statement.source === 'number'){
-                output.push(statement.target + " = " + statement.source);
-            }
-            // if it is a operation on the right
-            else{
-                output.push(statement.target + " = " + statement.source.left + statement.source.op + statement.source.right);
-            }
+            output.push(statement.target + " = " + statement.source.left + statement.source.op + statement.source.right);
         }
     }
   }

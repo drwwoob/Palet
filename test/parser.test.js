@@ -14,7 +14,7 @@ describe('Empty String', () => {
 
 // define register
 const defineReg = [
-  //["single color", "red1", new Program([])],
+  ["single color", "red1", new Program([])],
   ["*p", "red1, red2", 
     new Program([[new Assignment("P0", 0), 0]])],
   ["*p+", "red1, red2, red3", 

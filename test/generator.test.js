@@ -10,22 +10,23 @@ function dedent(s) {
 
 const fixtures = [
     {
-      name: "plus 1",
-      source:  "red1, red2, red3, red4, red5, red3",
+      name: "plus 1, print",
+      source:  "red1, red2, red3, red4, red5, red3, red2",
       expected: dedent`
         let P0 = 0
         P0 = P0+1
+        console.log((char)P0)
       `,
     },
 ]
 
 describe("The code generator", () => {
     for (const fixture of fixtures) {
-      it(`produces expected js output for the ${fixture.name} program`, () => {
-        const actual = generate(parse(tokenize(fixture.source)))
-        assert.deepEqual(actual, fixture.expected)
-        clearCompiler();
-        clear();
-      });
+        it(`produces expected js output for the ${fixture.name} program`, () => {
+            const actual = generate(parse(tokenize(fixture.source)))
+            assert.deepEqual(actual, fixture.expected)
+            clearCompiler();
+            clear();
+        });
     }
-  })
+})
