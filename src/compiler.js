@@ -9,7 +9,6 @@ const resultString = [];
 
 export default function compile(source) {
   const program = parse(tokenize(source));
-  // console.log(parse(tokenize(source).statements[7]));
   for(let i = 0; i < program.statements.length; i++){
     const statement = program.statements[i][0];
     if(statement.constructor.name === "Call"){
