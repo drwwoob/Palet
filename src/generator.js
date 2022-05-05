@@ -31,7 +31,13 @@ export default function generate(program) {
         seen.push(statement.target);
       }
       // if it is a operation on the right
-      else {
+      else if (
+        statement.target === statement.source.left &&
+        statement.source.right === 1 &&
+        statement.source.op === "+"
+      ) {
+        output.push(statement.target + "++");
+      } else {
         output.push(
           statement.target +
             " = " +

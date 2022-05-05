@@ -2,6 +2,7 @@
 
 import fs from "fs/promises";
 import process from "process";
+import util from "util";
 import tokenize from "../src/lexer.js";
 import generate from "../src/generator.js";
 import parse from "../src/parser.js";
@@ -9,6 +10,8 @@ import parse from "../src/parser.js";
 async function compileFromFile(filename) {
   try {
     const buffer = await fs.readFile(filename);
+    //const parsed = parse(tokenize(buffer.toString()));
+    //console.log(util.inspect(parsed, { depth: null }));
     console.log(generate(parse(tokenize(buffer.toString()))));
   } catch (e) {
     console.error(`\u001b[31m${e}\u001b[39m`);
