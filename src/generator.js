@@ -34,6 +34,16 @@ export default function generate(program) {
         }
         // if it is a operation on the right
         else{
+          //optimizer
+          // if(statement.source.right === 1){
+          //   if(statement.source.op === "+"){
+          //     output.push(statement.target + "++");
+          //   }
+          //   else if(statmenet.source.op === "-"){
+          //     output.push(statement.target + "--");
+          //   }
+          // }
+          // else
             output.push(statement.target + " = " + statement.source.left + statement.source.op + statement.source.right);
         }
     }
