@@ -109,7 +109,7 @@ describe("The parser is able to execute a single call", () => {
 
 const specialCasePrint = [
   ["*p+-J *?", "red1, red2, red3, red4, red5, red1, pink",
-    new Program([[new Assignment("P0", 0), 0], [new Call("print", "P0"), 5]])],
+    new Program([[new Assignment("P0", 0), 0], [new Call("printNum", "P0"), 5]])],
 ]
 
 describe("The parser is able to print with *?", () => {

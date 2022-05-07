@@ -13,6 +13,9 @@ export default function compile(source) {
     const statement = program.statements[i][0];
     if(statement.constructor.name === "Call"){
       switch(statement.callee){
+        case "printNum":
+          resultString.push(valueMap.get(statement.args));
+          break;
         case "print":
           resultString.push(String.fromCharCode(valueMap.get(statement.args)));
           break;

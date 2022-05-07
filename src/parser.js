@@ -124,7 +124,7 @@ function parseStatements(tokenStream) {
             //define new swatches and go back to top
             colorB = addToPalette(operandA, swatchB, tokenStream, swatchCount);
           } else {
-            statements.push([new Call("print", swatchA.palette), position]);
+            statements.push([new Call("printNum", swatchA.palette), position]);
             position += 2;
             //print
             //back to top without consuming colorB
