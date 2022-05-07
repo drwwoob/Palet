@@ -1,32 +1,33 @@
-import assert from "assert/strict"
-import tokenize from "../src/lexer.js"
-import generate from "../src/generator.js"
-import parse, { /*clearStatement,*/ clear} from "../src/parser.js"
-import compile, {  clearCompiler } from "../src/compiler.js"
+import assert from "assert/strict";
+import tokenize from "../src/lexer.js";
+import generate from "../src/generator.js";
+import parse, { /*clearStatement,*/ clear } from "../src/parser.js";
+import compile, { clearCompiler } from "../src/compiler.js";
 
 function dedent(s) {
-  return `${s}`.replace(/(?<=\n)\s+/g, "").trim()
+  return `${s}`.replace(/(?<=\n)\s+/g, "").trim();
 }
 
 const fixtures = [
-    {
-      name: "plus 1, print",
-      source:  "red1, red2, red3, red4, red5, red3, red2",
-      expected: dedent`
+  {
+    name: "plus 1, print",
+    source: "red1, red2, red3, red4, red5, red3, red2",
+    expected: dedent`
         let P0 = 0
-        P0 = P0+1
-        console.log((char)P0)
+        P0++
+        console.log(String.fromCodePoint(P0))
       `,
-    },
-]
+  },
+];
 
 describe("The code generator", () => {
-    for (const fixture of fixtures) {
-        it(`produces expected js output for the ${fixture.name} program`, () => {
-            const actual = generate(parse(tokenize(fixture.source)))
-            assert.deepEqual(actual, fixture.expected)
-            clearCompiler();
-            clear();
-        });
-    }
-})
+  for (const fixture of fixtures) {
+    it(`produces expected js output for the ${fixture.name} program`, () => {
+      const actual = generate(parse(tokenize(fixture.source)));
+      console.log(actual);
+      assert.deepEqual(actual, fixture.expected);
+      clearCompiler();
+      clear();
+    });
+  }
+});
