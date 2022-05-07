@@ -17,23 +17,11 @@ export class Assignment {
   }
 }
 
-export class Increment {
-  constructor(target) {
-    Object.assign(this, { target });
-  }
-}
-
 export class BinaryExpression {
   constructor(op, left, right) {
     Object.assign(this, { op, left, right });
   }
 }
-
-// export class UnaryExpression {
-//   constructor(op, operand) {
-//     Object.assign(this, { op, operand });
-//   }
-// }
 
 export class Call {
   constructor(callee, args) {

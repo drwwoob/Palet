@@ -3,7 +3,6 @@ import {
   Assignment,
   BinaryExpression,
   Call,
-  Increment,
 } from "./core.js";
 
 const operators = ["*", "P", "+", "-", "j"];
